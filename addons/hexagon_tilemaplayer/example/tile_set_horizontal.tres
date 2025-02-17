@@ -29,7 +29,6 @@ texture_region_size = Vector2i(164, 190)
 
 [resource]
 tile_shape = 3
-tile_layout = 2
 tile_size = Vector2i(164, 190)
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Terrain 0"
