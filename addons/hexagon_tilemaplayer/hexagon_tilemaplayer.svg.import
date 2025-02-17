@@ -2,16 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cycwcpw0a3bkd"
-path="res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+uid="uid://chl4qyjdth4vj"
+path="res://.godot/imported/hexagon_tilemaplayer.svg-d91b1dad03244d53c0b4f2cc1a8a9d7c.ctex"
 metadata={
+"has_editor_variant": true,
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icon.svg"
-dest_files=["res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"]
+source_file="res://addons/hexagon_tilemaplayer/hexagon_tilemaplayer.svg"
+dest_files=["res://.godot/imported/hexagon_tilemaplayer.svg-d91b1dad03244d53c0b4f2cc1a8a9d7c.ctex"]
 
 [params]
 
@@ -33,5 +34,5 @@ process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
 svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
+editor/scale_with_editor_scale=true
+editor/convert_colors_with_editor_theme=true

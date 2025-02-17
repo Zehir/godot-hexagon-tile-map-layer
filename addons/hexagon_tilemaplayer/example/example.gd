@@ -2,6 +2,22 @@ extends Node2D
 
 @onready var horizontal: HexagonTileMapLayer = $Horizontal
 @onready var vertical: HexagonTileMapLayer = $Vertical
+@onready var camera_2d: Camera2D = $Camera2D
+
+var is_camera_panning: bool = false
+
+
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed("right_click"):
+		is_camera_panning = true
+	elif event.is_action_released("right_click"):
+		is_camera_panning = false
+	if is_camera_panning and event is InputEventMouseMotion:
+		camera_2d.position -= (event as InputEventMouseMotion).relative / camera_2d.zoom.x
+	if event.is_action_pressed("zoom_up"):
+		camera_2d.zoom *= 0.9
+	if event.is_action_pressed("zoom_down"):
+		camera_2d.zoom *= 1.1
 
 
 func _ready() -> void:

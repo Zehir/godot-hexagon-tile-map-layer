@@ -1,5 +1,5 @@
 @tool
-
+@icon("hexagon_tilemaplayer.svg")
 class_name HexagonTileMapLayer extends TileMapLayer
 
 var astar: AStar2D
@@ -30,21 +30,21 @@ func _enter_tree() -> void:
 	if Engine.is_editor_hint():
 		tile_set.changed.connect(update_configuration_warnings)
 	else:
-		tile_set.changed.connect(_update_conversion_methods)
+		tile_set.changed.connect(_on_tileset_changed)
 
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint():
 		tile_set.changed.disconnect(update_configuration_warnings)
 	else:
-		tile_set.changed.disconnect(_update_conversion_methods)
+		tile_set.changed.disconnect(_on_tileset_changed)
 
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 
-	_update_conversion_methods()
+	_on_tileset_changed()
 
 	if pathfinding_enabled:
 		astar_changed.connect(_draw_debug, Object.CONNECT_DEFERRED)
@@ -56,16 +56,15 @@ func _ready() -> void:
 		_draw_debug.call_deferred()
 
 
-var _cube_to_map: Callable
-var _map_to_cube: Callable
-
-
 func _get_configuration_warnings():
 	var warnings: Array[String] = []
 	if tile_set.tile_shape != TileSet.TileShape.TILE_SHAPE_HEXAGON:
 		warnings.append("This node only support hexagon shapes")
 
-	if not tile_set.tile_layout == TileSet.TileLayout.TILE_LAYOUT_STACKED or tile_set.tile_layout == TileSet.TileLayout.TILE_LAYOUT_STACKED_OFFSET:
+	if (
+		not tile_set.tile_layout == TileSet.TileLayout.TILE_LAYOUT_STACKED
+		or tile_set.tile_layout == TileSet.TileLayout.TILE_LAYOUT_STACKED_OFFSET
+	):
 		warnings.append("This script only support stacked layout")
 	return warnings
 
@@ -84,7 +83,9 @@ func pathfinding_get_point_id(coord: Vector2i) -> int:
 
 
 func pathfinding_recalculate_tile_weight(coord: Vector2i):
-	astar.set_point_weight_scale(pathfinding_get_point_id(coord), _pathfinding_get_tile_weight(coord))
+	astar.set_point_weight_scale(
+		pathfinding_get_point_id(coord), _pathfinding_get_tile_weight(coord)
+	)
 
 
 func _pathfinding_generate_points():
@@ -107,7 +108,12 @@ func _draw_debug():
 		for id in astar.get_point_ids():
 			for neighbour_id in astar.get_point_connections(id):
 				if neighbour_id > id:
-					_pathfinding_debug_display_connection(connections_container, id, neighbour_id, Color(randf(), randf(), randf(), 1.0))
+					_pathfinding_debug_display_connection(
+						connections_container,
+						id,
+						neighbour_id,
+						Color(randf(), randf(), randf(), 1.0)
+					)
 		debug_container.add_child(connections_container)
 
 	if debug_mode & DebugModeFlags.TILES_COORDS:
@@ -137,7 +143,9 @@ func _pathfinding_create_points():
 func _debug_tile_coords_with_pathfinding(debug_container: Node2D, id: int):
 	var pos = local_to_map(astar.get_point_position(id))
 	var cube = map_to_cube(pos)
-	var text = "[center]#%d\n(%d, %d)\n(%d, %d, %d)[/center]" % [id, pos.x, pos.y, cube.x, cube.y, cube.z]
+	var text = (
+		"[center]#%d\n(%d, %d)\n(%d, %d, %d)[/center]" % [id, pos.x, pos.y, cube.x, cube.y, cube.z]
+	)
 	_show_debug_text_on_tile(debug_container, pos, text)
 
 
@@ -187,7 +195,9 @@ func _pathfinding_create_connections() -> void:
 			astar.connect_points(id, neighbour_id)
 
 
-func _pathfinding_debug_display_connection(debug_container: Node2D, id1: int, id2: int, color: Color):
+func _pathfinding_debug_display_connection(
+	debug_container: Node2D, id1: int, id2: int, color: Color
+):
 	var line: Line2D = Line2D.new()
 	line.default_color = color
 	line.add_point(astar.get_point_position(id1))
@@ -198,6 +208,8 @@ func _pathfinding_debug_display_connection(debug_container: Node2D, id1: int, id
 #endregion
 
 #region Cube coords conversions
+var _cube_to_map: Callable
+var _map_to_cube: Callable
 
 
 func cube_to_local(cube_position: Vector3i) -> Vector2:
@@ -208,48 +220,88 @@ func local_to_cube(map_position: Vector2) -> Vector3i:
 	return map_to_cube(local_to_map(map_position))
 
 
-func _update_conversion_methods() -> void:
-	match tile_set.tile_offset_axis:
+func _on_tileset_changed() -> void:
+	print("_on_tileset_changed")
+	_debug_font_size = floori(tile_set.tile_size.x / 7.0)
+	_debug_font_outline_size = floori(tile_set.tile_size.x / 32.0)
+	var conversion_methods := get_conversion_methods_for(
+		tile_set.tile_offset_axis, tile_set.tile_layout
+	)
+	if not conversion_methods.is_empty():
+		_cube_to_map = conversion_methods.cube_to_map
+		_map_to_cube = conversion_methods.map_to_cube
+
+
+static func get_conversion_methods_for(
+	axis: TileSet.TileOffsetAxis, layout: TileSet.TileLayout
+) -> Dictionary:
+	match axis:
 		TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
-			match tile_set.tile_layout:
+			match layout:
 				TileSet.TileLayout.TILE_LAYOUT_STACKED:
-					_cube_to_map = _cube_to_horizontal_stacked
-					_map_to_cube = _horizontal_stacked_to_cube
+					return {
+						"cube_to_map": _cube_to_horizontal_stacked,
+						"map_to_cube": _horizontal_stacked_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_STACKED_OFFSET:
-					_cube_to_map = _cube_to_horizontal_stacked_offset
-					_map_to_cube = _horizontal_stacked_offset_to_cube
+					return {
+						"cube_to_map": _cube_to_horizontal_stacked_offset,
+						"map_to_cube": _horizontal_stacked_offset_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_STAIRS_RIGHT:
-					_cube_to_map = _cube_to_horizontal_stairs_right
-					_map_to_cube = _horizontal_stairs_right_to_cube
+					return {
+						"cube_to_map": _cube_to_horizontal_stairs_right,
+						"map_to_cube": _horizontal_stairs_right_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_STAIRS_DOWN:
-					_cube_to_map = _cube_to_horizontal_stairs_down
-					_map_to_cube = _horizontal_stairs_down_to_cube
+					return {
+						"cube_to_map": _cube_to_horizontal_stairs_down,
+						"map_to_cube": _horizontal_stairs_down_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT:
-					_cube_to_map = _cube_to_horizontal_diamond_right
-					_map_to_cube = _horizontal_diamond_right_to_cube
+					return {
+						"cube_to_map": _cube_to_horizontal_diamond_right,
+						"map_to_cube": _horizontal_diamond_right_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_DIAMOND_DOWN:
-					_cube_to_map = _cube_to_horizontal_diamond_down
-					_map_to_cube = _horizontal_diamond_down_to_cube
+					return {
+						"cube_to_map": _cube_to_horizontal_diamond_down,
+						"map_to_cube": _horizontal_diamond_down_to_cube
+					}
 		TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_VERTICAL:
-			match tile_set.tile_layout:
+			match layout:
 				TileSet.TileLayout.TILE_LAYOUT_STACKED:
-					_cube_to_map = _cube_to_vertical_stacked
-					_map_to_cube = _vertical_stacked_to_cube
+					return {
+						"cube_to_map": _cube_to_vertical_stacked,
+						"map_to_cube": _vertical_stacked_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_STACKED_OFFSET:
-					_cube_to_map = _cube_to_vertical_stacked_offset
-					_map_to_cube = _vertical_stacked_offset_to_cube
+					return {
+						"cube_to_map": _cube_to_vertical_stacked_offset,
+						"map_to_cube": _vertical_stacked_offset_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_STAIRS_RIGHT:
-					_cube_to_map = _cube_to_vertical_stairs_right
-					_map_to_cube = _vertical_stairs_right_to_cube
+					return {
+						"cube_to_map": _cube_to_vertical_stairs_right,
+						"map_to_cube": _vertical_stairs_right_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_STAIRS_DOWN:
-					_cube_to_map = _cube_to_vertical_stairs_down
-					_map_to_cube = _vertical_stairs_down_to_cube
+					return {
+						"cube_to_map": _cube_to_vertical_stairs_down,
+						"map_to_cube": _vertical_stairs_down_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT:
-					_cube_to_map = _cube_to_vertical_diamond_right
-					_map_to_cube = _vertical_diamond_right_to_cube
+					return {
+						"cube_to_map": _cube_to_vertical_diamond_right,
+						"map_to_cube": _vertical_diamond_right_to_cube
+					}
 				TileSet.TileLayout.TILE_LAYOUT_DIAMOND_DOWN:
-					_cube_to_map = _cube_to_vertical_diamond_down
-					_map_to_cube = _vertical_diamond_down_to_cube
+					return {
+						"cube_to_map": _cube_to_vertical_diamond_down,
+						"map_to_cube": _vertical_diamond_down_to_cube
+					}
+	push_error("Could not find conversion method for axis %d and layout %s" % [axis, layout])
+	return {}
 
 
 func cube_to_map(cube_position: Vector3i) -> Vector2i:
@@ -485,7 +537,9 @@ static func cube_range(center: Vector3i, distance: int) -> Array[Vector3i]:
 	return results
 
 
-static func cube_intersect_ranges(center1: Vector3i, range1: int, center2: Vector3i, range2: int) -> Array[Vector3i]:
+static func cube_intersect_ranges(
+	center1: Vector3i, range1: int, center2: Vector3i, range2: int
+) -> Array[Vector3i]:
 	var results: Array[Vector3i] = []
 	var xmin = max(center1.x - range1, center2.x - range2)
 	var xmax = min(center1.x + range1, center2.x + range2)
@@ -533,7 +587,9 @@ static func cube_reflect_from(position: Vector3i, from: Vector3i, axis: int) -> 
 	return from + cube_reflect(position - from, axis)
 
 
-static func cube_rect(center: Vector3i, corner: Vector3i, axis: int = Vector3i.AXIS_Y) -> Array[Vector3i]:
+static func cube_rect(
+	center: Vector3i, corner: Vector3i, axis: int = Vector3i.AXIS_Y
+) -> Array[Vector3i]:
 	var result: Array[Vector3i] = []
 	result.resize(4)
 	result[0] = corner
