@@ -50,9 +50,6 @@ jobs:
           # Copy only the addon files, excluding example directory
           rsync --archive --exclude={"hexagon_tilemaplayer/example"} addons/hexagon_tilemaplayer "$ADDON_ARCHIVE"/addons/
 
-          # Copy root markdown files
-          cp *.md "$ADDON_ARCHIVE"/addons/hexagon_tilemaplayer/
-
           # Make archive from subdirectory
           zip --recurse-paths "$ADDON_ARCHIVE".zip "$ADDON_ARCHIVE"
 
