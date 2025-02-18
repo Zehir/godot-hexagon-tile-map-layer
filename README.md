@@ -9,6 +9,7 @@ Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube
 - Conversion between different coordinate systems
 - Both offset axis support (horizontal, vertical)
 - All layout support (stacked, stacked offset, stairs right, stairs down, diamond right, diamond down)
+- Toolbar actions to fix tilemaps after layout changes
 - Debug visualization
 
 ## Quick Start
@@ -79,6 +80,23 @@ Key concepts:
    - Northwest: r-1, s+1
 
 This coordinate system makes many hex grid algorithms simpler and more elegant, as they can be adapted from existing 3D cartesian coordinate algorithms.
+
+## Toolbar actions
+
+The extension adds a toolbar button in the editor (with the hexagon icon) when exactly one HexagonTileMapLayer node is selected that provides the following actions:
+
+- **Fix tile layout**: When changing a tileset's layout (e.g., from Stacked to Diamond), the tiles in existing tilemaps will be misplaced. This action helps fix the tilemap by converting the tiles' positions from their original layout to the new one.
+
+  The submenu provides options to specify what the original layout was:
+
+  - Was Stacked
+  - Was Stacked Offset
+  - Was Stairs Right
+  - Was Stairs Down
+  - Was Diamond Right
+  - Was Diamond Down
+
+  Simply select your HexagonTileMapLayer node and choose the layout that was previously used. The tiles will be automatically repositioned to match the new layout while maintaining their relative positions. If you're not sure what the original layout was, you can try each option until the tiles align correctly and use the undo feature if needed between attempts.
 
 ## Constants
 
