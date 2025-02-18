@@ -1,0 +1,62 @@
+name: Create Release Archive
+
+on:
+  push:
+    # Only run this workflow if github.ref_name has the form "x.y.z".
+    tags: ["*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+        # Repository name, with owner name removed using sed (Stream Editor).
+        # Example: "octocat/octorepo" is converted to "octorepo".
+      - name: Repository Name
+        run: echo REPOSITORY=`echo ${{ github.repository }} | sed -E 's#.*/godot-(.*)#\1#'` >> "$GITHUB_ENV"
+
+        # Example: octorepo-1.2.3-full
+      - name: Full Archive Name
+        run: echo FULL_ARCHIVE="$REPOSITORY"-"${{ github.ref_name }}"-full >> "$GITHUB_ENV"
+
+        # Example: octorepo-1.2.3-addon
+      - name: Addon Archive Name
+        run: echo ADDON_ARCHIVE="$REPOSITORY"-"${{ github.ref_name }}"-addon >> "$GITHUB_ENV"
+
+        # Example: octorepo-1.2.3-full.zip
+      - name: Make Full Archive
+        run: |
+          # Create subdirectory, which will be archive's top level directory.
+          mkdir "$FULL_ARCHIVE"
+
+          # Copy desired files into subdirectory, excluding the subdirectory itself.
+          # rsync is used because it has an --exclude option.
+          rsync --archive --exclude={"$FULL_ARCHIVE",".git*"} . "$FULL_ARCHIVE"
+
+          # Make archive from subdirectory.
+          zip --recurse-paths "$FULL_ARCHIVE".zip "$FULL_ARCHIVE"
+
+        # Example: octorepo-1.2.3-addon.zip
+      - name: Make Addon Archive
+        run: |
+          # Create subdirectory for the addon
+          mkdir -p "$ADDON_ARCHIVE"/addons
+
+          # Copy only the addon files, excluding example directory
+          rsync --archive --exclude={"hexagon_tilemaplayer/example"} addons/hexagon_tilemaplayer "$ADDON_ARCHIVE"/addons/
+
+          # Copy root markdown files
+          cp *.md "$ADDON_ARCHIVE"/addons/hexagon_tilemaplayer/
+
+          # Make archive from subdirectory
+          zip --recurse-paths "$ADDON_ARCHIVE".zip "$ADDON_ARCHIVE"
+
+      - name: Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.zip"
