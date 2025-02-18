@@ -233,7 +233,6 @@ const cube_horizontal_direction_vectors = {
 }
 
 const cube_horizontal_side_neighbors: Array[TileSet.CellNeighbor] = [
-	# Direct side
 	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
 	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
 	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
@@ -269,7 +268,6 @@ const cube_vertical_direction_vectors = {
 }
 
 const cube_vertical_side_neighbors: Array[TileSet.CellNeighbor] = [
-	# Direct side
 	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
 	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
 	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE,
@@ -569,16 +567,17 @@ func cube_neighbors(cube: Vector3i) -> Array[Vector3i]:
 static func cube_neighbors_for_axis(
 	axis: TileSet.TileOffsetAxis, cube: Vector3i
 ) -> Array[Vector3i]:
+	var result: Array[Vector3i] = []
+	result.resize(6)
 	if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
-		return cube_horizontal_side_neighbors.map(
-			func(neighbor: TileSet.CellNeighbor):
-				return cube + cube_horizontal_direction_vectors[neighbor]
-		)
+		for neighbor_index in cube_horizontal_side_neighbors.size():
+			var neighbor = cube_horizontal_side_neighbors[neighbor_index]
+			result[neighbor_index] = cube + cube_horizontal_direction_vectors[neighbor]
 	else:
-		return cube_vertical_side_neighbors.map(
-			func(neighbor: TileSet.CellNeighbor):
-				return cube + cube_vertical_direction_vectors[neighbor]
-		)
+		for neighbor_index in cube_vertical_side_neighbors.size():
+			var neighbor = cube_vertical_side_neighbors[neighbor_index]
+			result[neighbor_index] = cube + cube_vertical_direction_vectors[neighbor]
+	return result
 
 
 func cube_corner_neighbors(cube: Vector3i) -> Array[Vector3i]:
@@ -588,16 +587,17 @@ func cube_corner_neighbors(cube: Vector3i) -> Array[Vector3i]:
 static func cube_corner_neighbors_for_axis(
 	axis: TileSet.TileOffsetAxis, cube: Vector3i
 ) -> Array[Vector3i]:
+	var result: Array[Vector3i] = []
+	result.resize(6)
 	if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
-		return cube_horizontal_corner_neighbors.map(
-			func(neighbor: TileSet.CellNeighbor):
-				return cube + cube_horizontal_direction_vectors[neighbor]
-		)
+		for neighbor_index in cube_horizontal_corner_neighbors.size():
+			var neighbor = cube_horizontal_corner_neighbors[neighbor_index]
+			result[neighbor_index] = cube + cube_horizontal_direction_vectors[neighbor]
 	else:
-		return cube_vertical_corner_neighbors.map(
-			func(neighbor: TileSet.CellNeighbor):
-				return cube + cube_vertical_direction_vectors[neighbor]
-		)
+		for neighbor_index in cube_vertical_corner_neighbors.size():
+			var neighbor = cube_vertical_corner_neighbors[neighbor_index]
+			result[neighbor_index] = cube + cube_vertical_direction_vectors[neighbor]
+	return result
 
 
 static func cube_distance(a: Vector3i, b: Vector3i) -> int:

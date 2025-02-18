@@ -27,7 +27,6 @@ func _on_selection_changed():
 	var is_visible = _is_hexagon_tilemaplayer_node_selected()
 	if not is_visible:
 		remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, canvas_toolbar)
-		canvas_toolbar.queue_free()
 		return
 
 	if not canvas_toolbar:
