@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Ignore all directories in addons except hexagon_tilemaplayer
+/addons/*
+!/addons/hexagon_tilemaplayer/
