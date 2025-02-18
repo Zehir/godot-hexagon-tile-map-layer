@@ -1,7 +1,5 @@
 extends Node2D
 
-@onready var horizontal: HexagonTileMapLayer = $Horizontal
-@onready var vertical: HexagonTileMapLayer = $Vertical
 @onready var camera_2d: Camera2D = $Camera2D
 
 var is_camera_panning: bool = false
@@ -21,7 +19,7 @@ func _unhandled_input(event: InputEvent):
 
 
 func _ready() -> void:
-	for tile_map: HexagonTileMapLayer in [horizontal, vertical]:
+	for tile_map: HexagonTileMapLayer in find_children("*", "HexagonTileMapLayer"):
 		if tile_map.is_visible_in_tree():
 			demo_spirale(tile_map, Vector2i(0, 0))
 			var gray_cells = tile_map.get_used_cells_by_id(1, Vector2i(0, 0), 5)
@@ -37,7 +35,9 @@ func demo_spirale(tile_map: HexagonTileMapLayer, center: Vector2i, radius: int =
 	var line = Line2D.new()
 	line.width = 20.0
 	line.default_color = Color.BLUE
-	for point in tile_map.cube_spiral(_center, 2, TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE):
+	for point in tile_map.cube_spiral(
+		_center, 2, TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE
+	):
 		line.add_point(tile_map.cube_to_local(point))
 	tile_map.add_child(line)
 
