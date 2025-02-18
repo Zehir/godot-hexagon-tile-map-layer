@@ -21,3 +21,4 @@ mono_crash.*.json
 # Ignore all directories in addons except hexagon_tilemaplayer
 /addons/*
 !/addons/hexagon_tilemaplayer/
+hexagon_tilemaplayer.png.import
