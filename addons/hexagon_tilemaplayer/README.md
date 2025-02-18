@@ -22,21 +22,21 @@ Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube
 extends HexagonTileMapLayer
 
 func _ready():
-        # Enable pathfinding
-        pathfinding_enabled = true
+    # Enable pathfinding
+    pathfinding_enabled = true
 
-        # Customize pathfinding weights (optional)
-        func _pathfinding_get_tile_weight(coords: Vector2i) -> float:
-                # Return custom weight value (default is 1.0)
-                return 1.0
+    # Customize pathfinding weights (optional)
+    func _pathfinding_get_tile_weight(coords: Vector2i) -> float:
+        # Return custom weight value (default is 1.0)
+        return 1.0
 
-        # Customize pathfinding connections (optional)
-        func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
-                # Return whether tiles should be connected (default is true)
-                return true
+    # Customize pathfinding connections (optional)
+    func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
+        # Return whether tiles should be connected (default is true)
+        return true
 
-        # Enable debug visualization (optional)
-        debug_mode = DebugModeFlags.TILES_COORDS | DebugModeFlags.CONNECTIONS
+    # Enable debug visualization (optional)
+    debug_mode = DebugModeFlags.TILES_COORDS | DebugModeFlags.CONNECTIONS
 ```
 
 See the `example.tscn` scene for a complete demo of the features.
@@ -72,6 +72,7 @@ Key concepts:
    - Rotation and reflection
 
 3. **Directional Movement**: Each hex direction combines two cube coordinate changes:
+
    - Northeast: q+1, s-1
    - East: q+1, r-1
    - Southeast: r+1, s-1
@@ -115,20 +116,20 @@ Collection of predefined vectors for hex movement and neighbor identification. T
 
 ```gdscript
 const cube_horizontal_direction_vectors = {
-	# Direct side
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE: Vector3i(1, 0, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(0, 1, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE: Vector3i(-1, 0, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(0, -1, 1),
-	# Corner
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(2, -1, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, 1, -2),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER: Vector3i(-1, 2, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-2, 1, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, -1, 2),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_CORNER: Vector3i(1, -2, 1),
+    # Direct side
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE: Vector3i(1, 0, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(0, 1, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE: Vector3i(-1, 0, 1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(0, -1, 1),
+    # Corner
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(2, -1, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, 1, -2),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER: Vector3i(-1, 2, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-2, 1, 1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, -1, 2),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_CORNER: Vector3i(1, -2, 1),
 }
 ```
 
@@ -137,21 +138,21 @@ Arrays of neighbor directions for side and corner neighbors:
 ```gdscript
 # For horizontal offset axis:
 const cube_horizontal_side_neighbors: Array[TileSet.CellNeighbor] = [
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
 ]
 
 const cube_horizontal_corner_neighbors: Array[TileSet.CellNeighbor] = [
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_CORNER,
 ]
 ```
 
@@ -159,20 +160,20 @@ const cube_horizontal_corner_neighbors: Array[TileSet.CellNeighbor] = [
 
 ```gdscript
 const cube_vertical_direction_vectors = {
-	# Direct side
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(1, 0, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE: Vector3i(0, 1, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(-1, 0, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_SIDE: Vector3i(0, -1, 1),
-	# Corner
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(1, -2, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER: Vector3i(2, -1, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, 1, -2),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-1, 2, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER: Vector3i(-2, 1, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, -1, 2),
+    # Direct side
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(1, 0, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE: Vector3i(0, 1, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(-1, 0, 1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_SIDE: Vector3i(0, -1, 1),
+    # Corner
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(1, -2, 1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER: Vector3i(2, -1, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, 1, -2),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-1, 2, -1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER: Vector3i(-2, 1, 1),
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, -1, 2),
 }
 ```
 
@@ -180,21 +181,21 @@ Arrays of neighbor directions for side and corner neighbors:
 
 ```gdscript
 const cube_vertical_side_neighbors: Array[TileSet.CellNeighbor] = [
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_SIDE,
 ]
 
 const cube_vertical_corner_neighbors: Array[TileSet.CellNeighbor] = [
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER,
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER,
 ]
 ```
 
@@ -514,9 +515,9 @@ print(ring.size())  # Output: 12 (each ring has radius * 6 hexes)
 
 # Create a ring starting from the top-right
 var oriented_ring = tilemap.cube_ring(
-        center,
-        2,
-        TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE
+    center,
+    2,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE
 )
 
 # Create multiple concentric rings
@@ -546,9 +547,9 @@ print(spiral.size())  # Output: 19 (1 center + 6 for ring 1 + 12 for ring 2)
 
 # Create a spiral starting from a specific side
 var oriented_spiral = tilemap.cube_spiral(
-        center,
-        2,
-        TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE
+    center,
+    2,
+    TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE
 )
 
 # Visualization using ordered indices
@@ -620,7 +621,7 @@ print(reflection)  # Output: Vector3i(-2, 1, 1)
 # Create symmetrical formations
 var formation = [Vector3i(1, 0, -1), Vector3i(2, -1, -1)]
 var mirrored = formation.map(
-        func(p): return tilemap.cube_reflect_from(p, center, Vector3i.AXIS_Y)
+    func(p): return tilemap.cube_reflect_from(p, center, Vector3i.AXIS_Y)
 )
 print(mirrored)  # Output: [(-1, 0, 1), (-1, -1, 2)]
 ```
@@ -806,31 +807,31 @@ Other available static methods:
   - `map_to_cube`: Converts from tilemap coordinates to cube coordinates
   - `cube_to_map`: Converts from cube coordinates to tilemap coordinates
 
-  This is particularly useful when you need to handle different hex layouts in custom systems:
+This is particularly useful when you need to handle different hex layouts in custom systems:
 
-  ```gdscript
-  # Get converters for a specific layout
-  var converters = HexagonTileMapLayer.get_conversion_methods_for(
-      TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL,
-      TileSet.TileLayout.TILE_LAYOUT_STACKED
-  )
+```gdscript
+# Get converters for a specific layout
+var converters = HexagonTileMapLayer.get_conversion_methods_for(
+    TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL,
+    TileSet.TileLayout.TILE_LAYOUT_STACKED
+)
 
-  # Use the converters
-  var cube_pos = converters.map_to_cube.call(tile_pos)
-  var map_pos = converters.cube_to_map.call(cube_pos)
+# Use the converters
+var cube_pos = converters.map_to_cube.call(tile_pos)
+var map_pos = converters.cube_to_map.call(cube_pos)
 
-  # Handle multiple layouts
-  var layout_converters = {
-      "stacked": HexagonTileMapLayer.get_conversion_methods_for(
-          TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL,
-          TileSet.TileLayout.TILE_LAYOUT_STACKED
-      ),
-      "diamond": HexagonTileMapLayer.get_conversion_methods_for(
-          TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL,
-          TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT
-      )
-  }
-  ```
+# Handle multiple layouts
+var layout_converters = {
+    "stacked": HexagonTileMapLayer.get_conversion_methods_for(
+        TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL,
+        TileSet.TileLayout.TILE_LAYOUT_STACKED
+    ),
+    "diamond": HexagonTileMapLayer.get_conversion_methods_for(
+        TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL,
+        TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT
+    )
+}
+```
 
 ### Internal Conversion Methods
 
