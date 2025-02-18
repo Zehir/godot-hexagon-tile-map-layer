@@ -60,12 +60,6 @@ func _get_configuration_warnings():
 	var warnings: Array[String] = []
 	if tile_set.tile_shape != TileSet.TileShape.TILE_SHAPE_HEXAGON:
 		warnings.append("This node only support hexagon shapes")
-
-	if (
-		not tile_set.tile_layout == TileSet.TileLayout.TILE_LAYOUT_STACKED
-		or tile_set.tile_layout == TileSet.TileLayout.TILE_LAYOUT_STACKED_OFFSET
-	):
-		warnings.append("This script only support stacked layout")
 	return warnings
 
 
@@ -126,7 +120,7 @@ func _draw_debug():
 				_debug_tile_coords(coords_container, pos)
 		debug_container.add_child(coords_container)
 
-	get_tree().root.add_child.call_deferred(debug_container)
+	add_child.call_deferred(debug_container)
 
 
 func _pathfinding_create_points():
@@ -176,11 +170,21 @@ func _show_debug_text_on_tile(debug_container: Node2D, pos: Vector2i, text: Stri
 
 
 func _pathfinding_create_connections() -> void:
-	const neighbour_directions = [
-		TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
-	]
+	var neighbour_directions: Array[TileSet.CellNeighbor]
+	
+	match tile_set.tile_offset_axis:
+		TileSet.TILE_OFFSET_AXIS_HORIZONTAL:
+			neighbour_directions = [
+				TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
+				TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+				TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+			]
+		TileSet.TILE_OFFSET_AXIS_VERTICAL:
+			neighbour_directions = [
+				TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
+				TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+				TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE,
+			]
 
 	for id in astar.get_point_ids():
 		var local_position = astar.get_point_position(id)
@@ -212,6 +216,81 @@ var _cube_to_map: Callable
 var _map_to_cube: Callable
 
 
+const cube_horizontal_direction_vectors = {
+	# Direct side
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE: Vector3i(1, 0, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(0, 1, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE: Vector3i(-1, 0, 1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(0, -1, 1),
+	# Corner
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(2, -1, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, 1, -2),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER: Vector3i(-1, 2, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-2, 1, 1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, -1, 2),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_CORNER: Vector3i(1, -2, 1),
+}
+
+const cube_horizontal_side_neighbors : Array[TileSet.CellNeighbor] = [
+	# Direct side
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
+]
+
+const cube_horizontal_corner_neighbors : Array[TileSet.CellNeighbor] = [
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_CORNER,
+]
+
+const cube_vertical_direction_vectors = {
+	# Direct side
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(1, 0, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE: Vector3i(0, 1, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(-1, 0, 1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_SIDE: Vector3i(0, -1, 1),
+	# Corner
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(1, -2, 1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER: Vector3i(2, -1, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, 1, -2),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-1, 2, -1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER: Vector3i(-2, 1, 1),
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, -1, 2),
+}
+
+
+const cube_vertical_side_neighbors : Array[TileSet.CellNeighbor] = [
+	# Direct side
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_SIDE,
+]
+
+
+const cube_vertical_corner_neighbors : Array[TileSet.CellNeighbor] = [
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER,
+	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+]
+
+
 func cube_to_local(cube_position: Vector3i) -> Vector2:
 	return map_to_local(cube_to_map(cube_position))
 
@@ -221,7 +300,6 @@ func local_to_cube(map_position: Vector2) -> Vector3i:
 
 
 func _on_tileset_changed() -> void:
-	print("_on_tileset_changed")
 	_debug_font_size = floori(tile_set.tile_size.x / 7.0)
 	_debug_font_outline_size = floori(tile_set.tile_size.x / 32.0)
 	var conversion_methods := get_conversion_methods_for(
@@ -463,50 +541,39 @@ static func _vertical_diamond_down_to_cube(map_position: Vector2i) -> Vector3i:
 
 #region Cube coords maths
 
-const cube_direction_vectors = {
-	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE: Vector3i(1, 0, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Vector3i(0, 1, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Vector3i(-1, 1, 0),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE: Vector3i(-1, 0, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE: Vector3i(0, -1, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE: Vector3i(1, -1, 0),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER: Vector3i(2, -1, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Vector3i(1, -2, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Vector3i(-1, -1, 2),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER: Vector3i(-2, 1, 1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER: Vector3i(-1, 2, -1),
-	TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER: Vector3i(1, 1, -2),
-}
+func cube_direction(direction: TileSet.CellNeighbor) -> Vector3i:
+	return cube_direction_for_axis(tile_set.tile_offset_axis, direction)
+
+static func cube_direction_for_axis(axis: TileSet.TileOffsetAxis, direction: TileSet.CellNeighbor) -> Vector3i:
+	if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
+		return cube_horizontal_direction_vectors[direction]
+	else:
+		return cube_vertical_direction_vectors[direction]
 
 
-static func cube_direction(direction: TileSet.CellNeighbor) -> Vector3i:
-	return cube_direction_vectors[direction]
+func cube_neighbor(cube: Vector3i, direction: TileSet.CellNeighbor) -> Vector3i:
+	return cube_neighbor_for_axis(tile_set.tile_offset_axis, cube,direction)
 
+static func cube_neighbor_for_axis(axis: TileSet.TileOffsetAxis, cube: Vector3i, direction: TileSet.CellNeighbor) -> Vector3i:
+	return cube + cube_direction_for_axis(axis, direction)
 
-static func cube_neighbor(cube: Vector3i, direction: TileSet.CellNeighbor) -> Vector3i:
-	return cube + cube_direction(direction)
+func cube_neighbors(cube: Vector3i) -> Array[Vector3i]:
+	return cube_neighbors_for_axis(tile_set.tile_offset_axis, cube)
 
+static func cube_neighbors_for_axis(axis: TileSet.TileOffsetAxis, cube: Vector3i) -> Array[Vector3i]:
+	if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
+		return cube_horizontal_side_neighbors.map(func(neighbor: TileSet.CellNeighbor): return cube + cube_horizontal_direction_vectors[neighbor])
+	else:
+		return cube_vertical_side_neighbors.map(func(neighbor: TileSet.CellNeighbor): return cube + cube_vertical_direction_vectors[neighbor])
 
-static func cube_neighbors(cube: Vector3i) -> Array[Vector3i]:
-	return [
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE],
-	]
+func cube_corner_neighbors(cube: Vector3i) -> Array[Vector3i]:
+	return cube_corner_neighbors_for_axis(tile_set.tile_offset_axis, cube)
 
-
-static func cube_diagonal_neighbors(cube: Vector3i) -> Array[Vector3i]:
-	return [
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER],
-		cube + cube_direction_vectors[TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER],
-	]
+static func cube_corner_neighbors_for_axis(axis: TileSet.TileOffsetAxis, cube: Vector3i) -> Array[Vector3i]:
+	if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
+		return cube_horizontal_corner_neighbors.map(func(neighbor: TileSet.CellNeighbor): return cube + cube_horizontal_direction_vectors[neighbor])
+	else:
+		return cube_vertical_corner_neighbors.map(func(neighbor: TileSet.CellNeighbor): return cube + cube_vertical_direction_vectors[neighbor])
 
 
 static func cube_distance(a: Vector3i, b: Vector3i) -> int:
@@ -598,32 +665,42 @@ static func cube_rect(
 	result[3] = -result[1]
 	return result
 
+func cube_ring(center: Vector3i, radius: int, first_side: TileSet.CellNeighbor = -1) -> Array[Vector3i]:
+	return cube_ring_for_axis(tile_set.tile_offset_axis, center, radius, first_side)
 
-static func cube_ring(center: Vector3i, radius: int) -> Array[Vector3i]:
+static func cube_ring_for_axis(axis: TileSet.TileOffsetAxis, center: Vector3i, radius: int, first_side: TileSet.CellNeighbor = -1) -> Array[Vector3i]:
 	var result: Array[Vector3i] = []
+	var first_index: int
+	var neighbors := cube_horizontal_side_neighbors if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL else cube_vertical_side_neighbors
+	if first_side == -1:
+		first_index = 0
+		first_side = neighbors[first_index]
+	else:
+		first_index = neighbors.find(first_side)
+
+	if first_index == -1:
+		push_error("Invalid first_side value provided '%s'" % first_index)
+		return result
 	if radius < 1:
 		return result
-	var hex = center + cube_direction(TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE) * radius
-	for i in [
-		TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE,
-		TileSet.CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
-	]:
+
+	var hex = center + cube_direction_for_axis(axis, first_side) * radius
+	for i in range(first_index + 2, first_index + 8):
 		for j in range(radius):
 			result.append(hex)
-			hex = cube_neighbor(hex, i)
+			hex = cube_neighbor_for_axis(axis, hex, neighbors[i % 6])
 	return result
 
+func cube_spiral(center: Vector3i, radius: int, first_side: TileSet.CellNeighbor = -1):
+	return cube_spiral_for_axis(tile_set.tile_offset_axis, center, radius, first_side)
 
-static func cube_spiral(center: Vector3i, radius: int):
+
+static func cube_spiral_for_axis(axis: TileSet.TileOffsetAxis, center: Vector3i, radius: int, first_side: TileSet.CellNeighbor = -1):
 	var result: Array[Vector3i] = [center]
 	if radius < 1:
 		return result
 	for k in range(1, radius + 1):
-		var new_ring = cube_ring(center, k)
+		var new_ring = cube_ring_for_axis(axis, center, k, first_side)
 		for a in range(1, k):
 			new_ring.push_front(new_ring.pop_back())
 		result.append_array(new_ring)
@@ -631,20 +708,3 @@ static func cube_spiral(center: Vector3i, radius: int):
 
 
 #endregion
-
-
-func test(foo: Vector2i):
-	var foo_local = map_to_local(foo)
-	var foo_cube = map_to_cube(foo)
-	var center_cube = map_to_cube(Vector2i(0, 0))
-
-	#line.add_point(cube_to_local(center_cube))
-	var points = cube_spiral(center_cube, 2)
-	for point_index in range(1, points.size()):
-		var line = Line2D.new()
-		line.width = 5.0
-		line.default_color = Color(randf(), randf(), randf())
-		line.z_index = 1000
-		line.add_point(cube_to_local(points[point_index - 1]))
-		line.add_point(cube_to_local(points[point_index]))
-		add_child(line)

@@ -37,9 +37,9 @@ func demo_spirale(tile_map: HexagonTileMapLayer, center: Vector2i, radius: int =
 	var line = Line2D.new()
 	line.width = 20.0
 	line.default_color = Color.BLUE
-	for point in tile_map.cube_spiral(_center, 2):
+	for point in tile_map.cube_spiral(_center, 2, TileSet.CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE):
 		line.add_point(tile_map.cube_to_local(point))
-	add_child(line)
+	tile_map.add_child(line)
 
 
 func demo_line(tile_map: HexagonTileMapLayer, from: Vector2i, to: Vector2i) -> void:
@@ -50,7 +50,7 @@ func demo_line(tile_map: HexagonTileMapLayer, from: Vector2i, to: Vector2i) -> v
 	line.default_color = Color.WHITE
 	for point in tile_map.cube_linedraw(_from, _to):
 		line.add_point(tile_map.cube_to_local(point))
-	add_child(line)
+	tile_map.add_child(line)
 
 
 func demo_path_finding(tile_map: HexagonTileMapLayer, from: Vector2i, to: Vector2i) -> void:
@@ -62,4 +62,4 @@ func demo_path_finding(tile_map: HexagonTileMapLayer, from: Vector2i, to: Vector
 	for point in tile_map.astar.get_id_path(_from, _to):
 		var pos = tile_map.astar.get_point_position(point)
 		line.add_point(pos)
-	add_child(line)
+	tile_map.add_child(line)
