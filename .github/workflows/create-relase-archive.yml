@@ -36,7 +36,7 @@ jobs:
 
           # Copy desired files into subdirectory, excluding the subdirectory itself.
           # rsync is used because it has an --exclude option.
-          rsync --archive --exclude={"$FULL_ARCHIVE",".git*", "images*"} . "$FULL_ARCHIVE"
+          rsync --archive --exclude={"$FULL_ARCHIVE",".git*","images*"} . "$FULL_ARCHIVE"
 
           # Make archive from subdirectory.
           zip --recurse-paths "$FULL_ARCHIVE".zip "$FULL_ARCHIVE"
