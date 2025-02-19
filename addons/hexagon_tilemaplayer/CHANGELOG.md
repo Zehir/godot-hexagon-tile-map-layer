@@ -2,6 +2,6 @@
 
 ## 1.0.0
 
-### :heavy_plus_sign: Ajout
+### :heavy_plus_sign: New Features
 
 - Initial release
