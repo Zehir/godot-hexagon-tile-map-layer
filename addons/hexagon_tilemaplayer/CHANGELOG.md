@@ -10,4 +10,4 @@
 
 ### Patch Changes
 
-- Update external dependency
+- Fix incorrect loading of the toolbar
