@@ -2,6 +2,12 @@
 
 ## 1.0.0
 
-### :heavy_plus_sign: New Features
+### Added
 
 - Initial release
+
+## 1.0.1
+
+### Patch Changes
+
+- Update external dependency
