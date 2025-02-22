@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Hexagon TileMapLayer"
 run/main_scene="res://addons/hexagon_tilemaplayer/example/example.tscn"
-config/features=PackedStringArray("4.3", "Mobile")
+config/features=PackedStringArray("4.4", "Mobile")
 
 [editor_plugins]
 

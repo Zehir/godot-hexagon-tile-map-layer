@@ -1,7 +1,7 @@
 [gd_scene load_steps=29 format=4 uid="uid://dyaym0lhvqg0i"]
 
-[ext_resource type="Script" path="res://addons/hexagon_tilemaplayer/example/example.gd" id="1_evaox"]
-[ext_resource type="Script" path="res://addons/hexagon_tilemaplayer/example/example_tile_map.gd" id="2_208cx"]
+[ext_resource type="Script" uid="uid://hym333388jyt" path="res://addons/hexagon_tilemaplayer/example/example.gd" id="1_evaox"]
+[ext_resource type="Script" uid="uid://dnry6h0lul75" path="res://addons/hexagon_tilemaplayer/example/example_tile_map.gd" id="2_208cx"]
 [ext_resource type="Texture2D" uid="uid://bay24yvwkqxim" path="res://addons/hexagon_tilemaplayer/example/tile_horizontal.png" id="5_p6n7t"]
 [ext_resource type="Texture2D" uid="uid://c3tqvwb12rhq3" path="res://addons/hexagon_tilemaplayer/example/tile_vertical.png" id="6_cmu7f"]
 
@@ -540,3 +540,5 @@ debug_mode = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

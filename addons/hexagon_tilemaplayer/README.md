@@ -2,6 +2,8 @@
 
 Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube coordinates system.
 
+Require Godot 4.4+, for 4.3+ use version 1.0.1 or earlier
+
 ## Features
 
 - A\* pathfinding support
@@ -626,7 +628,107 @@ var mirrored = formation.map(
 print(mirrored)  # Output: [(-1, 0, 1), (-1, -1, 2)]
 ```
 
-### Pathfinding
+### Closest Cell Operations
+
+> **Note:** For all these methods, when requesting multiple cells (count > 1), the cells are returned in order of proximity to the target position. The closest cell is always at index 0.
+
+> **Implementation Detail:** The returned cells take into account the tile's orientation to determine the best matches.
+
+The extension provides several methods to find the closest hex cell(s) from a given position:
+
+- `get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vector3i]`: Returns an array of the closest hex cells to that position, ordered by proximity. The `count` parameter (default: 1) determines how many hexes to return. This is useful when you need to know not just the closest hex, but also nearby alternatives.
+
+```gdscript
+# Get multiple hexes near a position
+var pos = Vector2(150, 150)
+var nearby = tilemap.get_closest_cells_from_local(pos, 3)
+print(nearby)  # Output: [Vector2i(3,2), Vector2i(3,3), Vector2i(2,2)]
+
+# Create an area of effect around an impact point
+var impact_pos = projectile.global_position
+var affected = tilemap.get_closest_cells_from_local(
+    tilemap.to_local(impact_pos),
+    4  # Affect 4 closest hexes
+)
+for hex in affected:
+    apply_explosion_damage(hex)
+
+# Determine multiple valid placement positions
+func get_valid_placement_options(world_pos: Vector2) -> Array[Vector2i]:
+    var local_pos = tilemap.to_local(world_pos)
+    var candidates = tilemap.get_closest_cells_from_local(local_pos, 5)
+    return candidates.filter(func(hex): return is_valid_placement(hex))
+```
+
+- `get_closest_cell_from_local(local: Vector2) -> Vector3i`: Returns the map coordinates of the hex cell closest to a given position in the tilemap's local space.
+
+```gdscript
+# Get hex at a specific position
+var local_pos = Vector2(100, 100)
+var hex = tilemap.get_closest_cell_from_local(local_pos)
+print(hex)  # Output: Vector2i(2, 1) - coordinates of closest hex
+
+# Use with node positions
+var entity_pos = some_entity.position
+var entity_hex = tilemap.get_closest_cell_from_local(
+    tilemap.to_local(entity_pos)  # Convert to tilemap's local space
+)
+
+# Track entity movement between hexes
+func _process(_delta):
+    var current_hex = tilemap.get_closest_cell_from_local(position)
+    if current_hex != last_hex:
+        on_enter_new_hex(current_hex)
+        last_hex = current_hex
+```
+
+- `get_closest_cells_from_mouse(count: int = 1) -> Array[Vector3i]`: Returns an array of the closest hex cells to the mouse position, ordered by proximity. The `count` parameter (default: 1) determines how many hexes to return. This is useful when you need to know not just the closest hex, but also nearby alternatives.
+
+```gdscript
+# Get the three closest hexes to mouse
+var closest = tilemap.get_closest_cells_from_mouse()  # Default count: 3
+print(closest)  # Output: [Vector2i(2,1), Vector2i(2,2), Vector2i(1,1)]
+
+# Get just the closest hex
+var single = tilemap.get_closest_cells_from_mouse(1)
+print(single)  # Output: [Vector2i(2,1)]
+
+# Show multiple targeting options
+var possible_targets = tilemap.get_closest_cells_from_mouse(3)
+for hex in possible_targets:
+    highlight_hex(hex, Color(1, 1, 0, 0.3))  # Highlight potential targets
+
+# Create a splash damage preview
+func update_area_preview():
+    var targets = tilemap.get_closest_cells_from_mouse(3)
+    clear_previews()
+    for i in targets.size():
+        var alpha = 1.0 - (i * 0.25)  # Fade out further hexes
+        show_damage_preview(targets[i], alpha)
+```
+
+- `get_closest_cell_from_mouse() -> Vector3i`: Returns the map coordinates of the hex cell closest to the current mouse position.
+
+```gdscript
+# Get the hex under the mouse cursor
+var target_hex = tilemap.get_closest_cell_from_mouse()
+print(target_hex)  # Output: Vector2i(2, 1) - coordinates of the hex under mouse
+
+# Useful for hover effects
+func _process(_delta):
+    var hovered_hex = tilemap.get_closest_cell_from_mouse()
+    if hovered_hex != last_hovered_hex:
+        update_hover_indicator(hovered_hex)
+        last_hovered_hex = hovered_hex
+
+# Handle click events
+func _unhandled_input(event):
+    if event is InputEventMouseButton and event.pressed:
+        var clicked_hex = tilemap.get_closest_cell_from_mouse()
+        handle_hex_click(clicked_hex)
+```
+
+## Pathfinding
 
 The extension includes built-in A\* pathfinding support. When enabled, it automatically creates a navigation graph where each hex is a node and adjacent hexes are connected. You can customize the pathfinding behavior by overriding the weight calculation and connection rules.
 
