@@ -60,8 +60,6 @@ func _ready() -> void:
 
 	if pathfinding_enabled:
 		astar_changed.connect(_draw_debug, Object.CONNECT_DEFERRED)
-		astar = AStar2D.new()
-
 		_pathfinding_generate_points()
 		astar_changed.emit()
 	else:
@@ -95,6 +93,8 @@ func pathfinding_recalculate_tile_weight(coord: Vector2i):
 
 
 func _pathfinding_generate_points():
+	if not astar:
+		astar = AStar2D.new()
 	astar.clear()
 	_pathfinding_create_points()
 	_pathfinding_create_connections()
@@ -288,21 +288,6 @@ func local_to_cube(map_position: Vector2) -> Vector3i:
 	return map_to_cube(local_to_map(map_position))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 func _on_tileset_changed() -> void:
 	_debug_font_size = floori(tile_set.tile_size.x / 7.0)
 	_debug_font_outline_size = floori(tile_set.tile_size.x / 32.0)
@@ -412,7 +397,7 @@ static func _cube_to_horizontal_stacked(cube_position: Vector3i) -> Vector2i:
 static func _horizontal_stacked_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x - ((map_position.y & ~1) >> 1)
 	var l_y = map_position.y
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_horizontal_stacked_offset(cube_position: Vector3i) -> Vector2i:
@@ -424,7 +409,7 @@ static func _cube_to_horizontal_stacked_offset(cube_position: Vector3i) -> Vecto
 static func _horizontal_stacked_offset_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x - ((map_position.y + 1) >> 1)
 	var l_y = map_position.y
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_horizontal_stairs_right(cube_position: Vector3i) -> Vector2i:
@@ -436,45 +421,45 @@ static func _cube_to_horizontal_stairs_right(cube_position: Vector3i) -> Vector2
 static func _horizontal_stairs_right_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x
 	var l_y = map_position.y
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_horizontal_stairs_down(cube_position: Vector3i) -> Vector2i:
-	var l_y = -cube_position.x
-	var l_x = -cube_position.z - l_y
+	var l_y = - cube_position.x
+	var l_x = - cube_position.z - l_y
 	return Vector2i(l_x, l_y)
 
 
 static func _horizontal_stairs_down_to_cube(map_position: Vector2i) -> Vector3i:
-	var l_x = -map_position.y
+	var l_x = - map_position.y
 	var l_y = map_position.x + map_position.y + map_position.y
-	var l_z = -map_position.x - map_position.y
+	var l_z = - map_position.x - map_position.y
 	return Vector3i(l_x, l_y, l_z)
 
 
 static func _cube_to_horizontal_diamond_right(cube_position: Vector3i) -> Vector2i:
 	var l_x = cube_position.x
-	var l_y = -cube_position.z
+	var l_y = - cube_position.z
 	return Vector2i(l_x, l_y)
 
 
 static func _horizontal_diamond_right_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x
 	var l_y = map_position.y - map_position.x
-	var l_z = -map_position.y
+	var l_z = - map_position.y
 	return Vector3i(l_x, l_y, l_z)
 
 
 static func _cube_to_horizontal_diamond_down(cube_position: Vector3i) -> Vector2i:
-	var l_x = -cube_position.z
-	var l_y = -cube_position.x
+	var l_x = - cube_position.z
+	var l_y = - cube_position.x
 	return Vector2i(l_x, l_y)
 
 
 static func _horizontal_diamond_down_to_cube(map_position: Vector2i) -> Vector3i:
-	var l_x = -map_position.y
+	var l_x = - map_position.y
 	var l_y = map_position.x + map_position.y
-	var l_z = -map_position.x
+	var l_z = - map_position.x
 	return Vector3i(l_x, l_y, l_z)
 
 
@@ -487,7 +472,7 @@ static func _cube_to_vertical_stacked(cube_position: Vector3i) -> Vector2i:
 static func _vertical_stacked_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x
 	var l_y = map_position.y - ((map_position.x - (map_position.x & 1)) >> 1)
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_vertical_stacked_offset(cube_position: Vector3i) -> Vector2i:
@@ -499,19 +484,19 @@ static func _cube_to_vertical_stacked_offset(cube_position: Vector3i) -> Vector2
 static func _vertical_stacked_offset_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x
 	var l_y = map_position.y - ((map_position.x + (map_position.x & 1)) >> 1)
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_vertical_stairs_right(cube_position: Vector3i) -> Vector2i:
-	var l_x = -cube_position.y
+	var l_x = - cube_position.y
 	var l_y = cube_position.x + 2 * cube_position.y
 	return Vector2i(l_x, l_y)
 
 
 static func _vertical_stairs_right_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.y + map_position.x * 2
-	var l_y = -map_position.x
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	var l_y = - map_position.x
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_vertical_stairs_down(cube_position: Vector3i) -> Vector2i:
@@ -523,31 +508,31 @@ static func _cube_to_vertical_stairs_down(cube_position: Vector3i) -> Vector2i:
 static func _vertical_stairs_down_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_x = map_position.x
 	var l_y = map_position.y
-	return Vector3i(l_x, l_y, -l_x - l_y)
+	return Vector3i(l_x, l_y, - l_x - l_y)
 
 
 static func _cube_to_vertical_diamond_right(cube_position: Vector3i) -> Vector2i:
-	var l_x = -cube_position.y
-	var l_y = -cube_position.z
+	var l_x = - cube_position.y
+	var l_y = - cube_position.z
 	return Vector2i(l_x, l_y)
 
 
 static func _vertical_diamond_right_to_cube(map_position: Vector2i) -> Vector3i:
-	var l_y = -map_position.x
-	var l_z = -map_position.y
-	return Vector3i(-l_y - l_z, l_y, l_z)
+	var l_y = - map_position.x
+	var l_z = - map_position.y
+	return Vector3i(- l_y - l_z, l_y, l_z)
 
 
 static func _cube_to_vertical_diamond_down(cube_position: Vector3i) -> Vector2i:
-	var l_x = -cube_position.z
+	var l_x = - cube_position.z
 	var l_y = cube_position.y
 	return Vector2i(l_x, l_y)
 
 
 static func _vertical_diamond_down_to_cube(map_position: Vector2i) -> Vector3i:
 	var l_y = map_position.y
-	var l_z = -map_position.x
-	return Vector3i(-l_y - l_z, l_y, l_z)
+	var l_z = - map_position.x
+	return Vector3i(- l_y - l_z, l_y, l_z)
 
 
 #endregion
@@ -661,8 +646,8 @@ static func cube_linedraw(a: Vector3i, b: Vector3i) -> Array[Vector3i]:
 
 static func cube_range(center: Vector3i, distance: int) -> Array[Vector3i]:
 	var results: Array[Vector3i] = []
-	for q in range(-distance, distance + 1):
-		for r in range(max(-distance, -q - distance), min(distance, -q + distance) + 1):
+	for q in range(- distance, distance + 1):
+		for r in range(max(- distance, -q - distance), min(distance, -q + distance) + 1):
 			var s = -q - r
 			results.append(center + Vector3i(q, r, s))
 	return results
@@ -691,11 +676,11 @@ static func cube_rotate(position: Vector3i, rotations: int) -> Vector3i:
 	if rotations == 0:
 		return position
 	elif rotations < 0:
-		for i in range(-rotations):
-			position = Vector3i(-position.z, -position.x, -position.y)
+		for i in range(- rotations):
+			position = Vector3i(- position.z, - position.x, - position.y)
 	elif rotations > 0:
 		for i in range(rotations):
-			position = Vector3i(-position.y, -position.z, -position.x)
+			position = Vector3i(- position.y, - position.z, - position.x)
 	return position
 
 
@@ -725,8 +710,8 @@ static func cube_rect(
 	result.resize(4)
 	result[0] = corner
 	result[1] = cube_reflect_from(corner, center, axis)
-	result[2] = -result[0]
-	result[3] = -result[1]
+	result[2] = - result[0]
+	result[3] = - result[1]
 	return result
 
 

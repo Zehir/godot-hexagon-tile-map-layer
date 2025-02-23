@@ -21,9 +21,11 @@ Require Godot 4.4+, for 4.3+ use version 1.0.1 or earlier
 3. (Optional) If you need pathfinding, create a new script extending HexagonTileMapLayer:
 
 ```gdscript
+@tool
 extends HexagonTileMapLayer
 
 func _ready():
+    super._ready()
     # Enable pathfinding
     pathfinding_enabled = true
 
