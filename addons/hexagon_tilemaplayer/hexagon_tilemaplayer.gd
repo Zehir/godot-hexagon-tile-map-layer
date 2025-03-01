@@ -781,6 +781,16 @@ func cube_reflect_from(position: Vector3i, from: Vector3i, axis: Vector3i.Axis) 
 	return HexagonTileMap.cube_reflect_from(position, from, axis)
 
 
+## Creates a rectangle-like shape on the hex grid by reflecting a corner point around a center point.
+##
+## [br]Returns an array with all cell inside the rectangle. The axis parameter determines the reflection plane.
+## [codeblock]
+## # Create a rectangular formation
+## var center = Vector3i(0, 0, 0)
+## var corner = Vector3i(2, -1, -1)
+## var cells = tilemap.cube_rect_corners(center, corner)
+## [/codeblock]
+## See also [method cube_rect_corners].
 func cube_rect(
 	center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y
 ) -> Array[Vector3i]:

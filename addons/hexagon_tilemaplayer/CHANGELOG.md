@@ -63,3 +63,9 @@
 
 - Fix invalid return from `cube_rect_corners` function when center was not `0, 0, 0`
 - Rix documentation generation on plugin load (Related to Godot Issue)
+
+## 2.0.2
+
+### Fixed
+
+- Add missing documentation for `cube_rect`
