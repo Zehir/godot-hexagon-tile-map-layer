@@ -103,3 +103,11 @@ The extension adds a toolbar button in the editor (with the hexagon icon) when e
   - Was Diamond Down
 
   Simply select your HexagonTileMapLayer node and choose the layout that was previously used. The tiles will be automatically repositioned to match the new layout while maintaining their relative positions. If you're not sure what the original layout was, you can try each option until the tiles align correctly and use the undo feature if needed between attempts.
+
+## Documentation
+
+The extension includes a detailed documentation accessible from the editor. You can find it in the Help menu under the Search Help section.
+There is two classes documented:
+
+- HexagonTileMapLayer
+- HexagonTileMap
