@@ -788,7 +788,7 @@ func cube_reflect_from(position: Vector3i, from: Vector3i, axis: Vector3i.Axis) 
 ## # Create a rectangular formation
 ## var center = Vector3i(0, 0, 0)
 ## var corner = Vector3i(2, -1, -1)
-## var cells = tilemap.cube_rect_corners(center, corner)
+## var cells = tilemap.cube_rect(center, corner)
 ## [/codeblock]
 ## See also [method cube_rect_corners].
 func cube_rect(
