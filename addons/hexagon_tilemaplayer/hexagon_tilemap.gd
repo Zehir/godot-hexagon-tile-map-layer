@@ -631,8 +631,9 @@ static func cube_rect_corners(
 	result.resize(4)
 	result[0] = corner
 	result[1] = cube_reflect_from(corner, center, axis)
-	result[2] = -result[0]
-	result[3] = -result[1]
+	var center_twice = center + center
+	result[2] = center_twice - result[0]
+	result[3] = center_twice - result[1]
 	return result
 
 

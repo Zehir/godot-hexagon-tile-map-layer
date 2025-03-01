@@ -21,14 +21,14 @@
 ### Added
 
 - Axis dependant variables that get updated on ready
-  - cube_direction_vectors: Dictionary[TileSet.CellNeighbor, Vector3i]
-  - cube_side_neighbor_directions: Array[TileSet.CellNeighbor]
-  - cube_corner_neighbor_directions: Array[TileSet.CellNeighbor]
+	- cube_direction_vectors: Dictionary[TileSet.CellNeighbor, Vector3i]
+	- cube_side_neighbor_directions: Array[TileSet.CellNeighbor]
+	- cube_corner_neighbor_directions: Array[TileSet.CellNeighbor]
 - Methods to get cells position depending of local position
-  - get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vector3i]
-  - get_closest_cell_from_local(local: Vector2) -> Vector3i
-  - get_closest_cells_from_mouse(count: int = 1) -> Array[Vector3i]
-  - get_closest_cell_from_mouse() -> Vector3i
+	- get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vector3i]
+	- get_closest_cell_from_local(local: Vector2) -> Vector3i
+	- get_closest_cells_from_mouse(count: int = 1) -> Array[Vector3i]
+	- get_closest_cell_from_mouse() -> Vector3i
 
 ### Updated
 
@@ -48,11 +48,18 @@
 ### Updated
 
 - Changed the type of `axis` param from `int` to `Vector3i.Axis`. There is no difference in the runtime.
-  - cube_reflect(position: Vector3i, axis: Vector3i.Axis) -> Vector3i
-  - cube_reflect_from(position: Vector3i, from: Vector3i, axis: Vector3i.Axis) -> Vector3i
-  - cube_rect(center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y) -> Array[Vector3i]
-  - cube_rect_corners(center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y) -> Array[Vector3i]
+	- cube_reflect(position: Vector3i, axis: Vector3i.Axis) -> Vector3i
+	- cube_reflect_from(position: Vector3i, from: Vector3i, axis: Vector3i.Axis) -> Vector3i
+	- cube_rect(center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y) -> Array[Vector3i]
+	- cube_rect_corners(center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y) -> Array[Vector3i]
 
 ### Fixed
 
 - Fix return type of `cube_spiral` to be `Array[Vector3i]`
+
+## 2.0.1
+
+### Fixed
+
+- Fix invalid return from `cube_rect_corners` function when center was not `0, 0, 0`
+- Rix documentation generation on plugin load (Related to Godot Issue)

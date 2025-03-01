@@ -20,8 +20,13 @@ func _enter_tree():
 
 
 func _exit_tree():
+	remove_custom_type("HexagonTileMapLayer")
 	selection.selection_changed.disconnect(_on_selection_changed)
 
+func _ready() -> void:
+	# Because of https://github.com/godotengine/godot/issues/72406
+	ResourceSaver.save(preload("hexagon_tilemaplayer.gd"))
+	ResourceSaver.save(preload("hexagon_tilemap.gd"))
 
 func _on_selection_changed():
 	if _is_hexagon_tilemaplayer_node_selected():
