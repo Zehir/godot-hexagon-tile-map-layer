@@ -37,10 +37,10 @@ func _on_fix_layout_pressed(old_layout: int):
 		return
 
 	var tilemap: HexagonTileMapLayer = selection[0]
-	var old_conversion_methods := HexagonTileMapLayer.get_conversion_methods_for(
+	var old_conversion_methods := HexagonTileMap.get_conversion_methods_for(
 		tilemap.tile_set.tile_offset_axis, old_layout
 	)
-	var new_conversion_methods := HexagonTileMapLayer.get_conversion_methods_for(
+	var new_conversion_methods := HexagonTileMap.get_conversion_methods_for(
 		tilemap.tile_set.tile_offset_axis, tilemap.tile_set.tile_layout
 	)
 

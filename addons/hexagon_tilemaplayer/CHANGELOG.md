@@ -14,7 +14,7 @@
 
 ## 1.1.0
 
-### Breaking change
+### Breaking changes
 
 - Require Godot 4.4 or later
 
@@ -33,3 +33,26 @@
 ### Updated
 
 - Reduce axis comparaison for static methods by caching neighbor_directions and direction_vectors vars
+
+## 2.0.0
+
+### Breaking changes
+
+- Split the static methods inside a HexagonTileMap class
+- Renammed the `cube_rect` to `cube_rect_corners`
+
+### Added
+
+- New method `cube_rect` to get all cells inside the rect.
+
+### Updated
+
+- Changed the type of `axis` param from `int` to `Vector3i.Axis`. There is no difference in the runtime.
+  - cube_reflect(position: Vector3i, axis: Vector3i.Axis) -> Vector3i
+  - cube_reflect_from(position: Vector3i, from: Vector3i, axis: Vector3i.Axis) -> Vector3i
+  - cube_rect(center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y) -> Array[Vector3i]
+  - cube_rect_corners(center: Vector3i, corner: Vector3i, axis: Vector3i.Axis = Vector3i.Axis.AXIS_Y) -> Array[Vector3i]
+
+### Fixed
+
+- Fix return type of `cube_spiral` to be `Array[Vector3i]`
