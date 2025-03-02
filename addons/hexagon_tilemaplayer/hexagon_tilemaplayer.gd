@@ -186,7 +186,7 @@ func _pathfinding_generate_points():
 
 
 func _draw_debug():
-	if _debug_container:
+	if is_instance_valid(_debug_container):
 		_debug_container.queue_free()
 	if debug_mode == 0 or not is_visible_in_tree():
 		return
