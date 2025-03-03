@@ -70,7 +70,7 @@
 
 - Add missing documentation for `cube_rect`
 
-## [Unreleased]
+## 2.0.3
 
 ### Fixed
 
