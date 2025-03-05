@@ -101,8 +101,7 @@ func _ready() -> void:
 
 	if pathfinding_enabled:
 		astar_changed.connect(_draw_debug, Object.CONNECT_DEFERRED)
-		_pathfinding_generate_points()
-		astar_changed.emit()
+		pathfinding_generate_points()
 	else:
 		_draw_debug.call_deferred()
 
@@ -176,10 +175,20 @@ func pathfinding_recalculate_tile_weight(coord: Vector2i):
 	)
 
 
+## @deprecated: Use [method pathfinding_generate_points] instead.
 func _pathfinding_generate_points():
+	pathfinding_generate_points()
+
+
+## Generate points and connections for the [Astar2D] instance.
+##
+## [br]This is automatically called in the _ready() function.
+## [br]The points capacity is automatically adjusted based on the number of used cells.
+## [br]If later you need to add more points to the astar instance call [method AStar2D.reserve_space] with num_nodes the total of points multiplied by 1.12.
+## [br]See [url=https://github.com/godotengine/godot/issues/102612#issuecomment-2702275926]this issue[/url] for more information.
+func pathfinding_generate_points():
 	if not astar:
 		astar = AStar2D.new()
-	astar.clear()
 	_pathfinding_create_points()
 	_pathfinding_create_connections()
 	astar_changed.emit()
@@ -220,11 +229,16 @@ func _draw_debug():
 
 
 func _pathfinding_create_points():
+	astar.clear()
 	var cells := get_used_cells()
-	astar.reserve_space(1 << int(log(cells.size()) / log(2)))
+	# Why 1.12 ? See https://github.com/godotengine/godot/issues/102612#issuecomment-2702275926
+	var needed_space = cells.size() * 1.12
+	if astar.get_point_capacity() < needed_space:
+		astar.reserve_space(needed_space)
 
+	var id: int = -1
 	for coord in cells:
-		var id = astar.get_available_point_id()
+		id += 1
 		var weight = _pathfinding_get_tile_weight(coord)
 		var pos = map_to_local(coord)
 		astar.add_point(id, pos, weight)

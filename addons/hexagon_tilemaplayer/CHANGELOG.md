@@ -75,3 +75,14 @@
 ### Fixed
 
 - Fix debug container redraw
+
+## 2.0.4
+
+### Updated
+
+- \_pathfinding_generate_points() function is now called pathfinding_generate_points()
+
+### Fixed
+
+- Fix issue with pathfinding points capacity #1
+- astar_changed event was called twice.

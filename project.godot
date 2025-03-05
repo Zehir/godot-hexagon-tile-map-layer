@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.4", "Mobile")
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/hexagon_tilemaplayer/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/hexagon_tilemaplayer/plugin.cfg")
 
 [input]
 
