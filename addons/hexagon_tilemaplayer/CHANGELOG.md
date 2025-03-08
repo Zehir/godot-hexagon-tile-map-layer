@@ -1,23 +1,5 @@
 # Changelog
 
-## 2.3.0
-
-### Minor Changes
-
-- 3473be8: Test release 3
-
-## 2.2.0
-
-### Minor Changes
-
-- 67ff45c: Test release 2
-
-## 2.1.0
-
-### Minor Changes
-
-- ac9a383: Test release
-
 ## 2.0.4
 
 ### Updated
