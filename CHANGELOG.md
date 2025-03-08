@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0
+
+### Minor Changes
+
+- 67ff45c: Test release 2
+
 ## 2.1.0
 
 ### Minor Changes
