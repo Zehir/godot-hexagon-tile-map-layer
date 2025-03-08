@@ -25,3 +25,4 @@ mono_crash.*.json
 /images/*.import
 node_modules/
 *.log
+dist/
