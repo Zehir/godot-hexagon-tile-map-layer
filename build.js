@@ -26,6 +26,10 @@ if (fs.existsSync(DIST_PATH)) {
 fs.mkdirSync(DIST_PATH);
 console.log(`Created ${DIST_PATH} directory`);
 
+// Create .gdignore file in dist directory
+fs.writeFileSync(path.join(DIST_PATH, '.gdignore'), '');
+console.log('Created .gdignore file in dist directory');
+
 // Function to add files recursively to zip
 function addFilesToZip(zip, sourceDir, zipPath = '', excludes = []) {
     const files = fs.readdirSync(sourceDir);
@@ -48,28 +52,25 @@ function addFilesToZip(zip, sourceDir, zipPath = '', excludes = []) {
 
 // Create archives
 const baseArchiveName = `${packageJson.name}-${packageJson.version}`;
-const fullArchiveName = `${baseArchiveName}-full`;
+const exampleArchiveName = `${baseArchiveName}-with-example`;
 const addonArchiveName = `${baseArchiveName}-addon`;
 
 // Create full archive
 const fullZip = new AdmZip();
-addFilesToZip(fullZip, '.', fullArchiveName, [
-    'dist',
-    '.git',
-    'images',
-    'node_modules'
-]);
-fullZip.writeZip(path.join(DIST_PATH, `${fullArchiveName}.zip`));
+const excludePatterns = [];
+
+addFilesToZip(fullZip, ADDON_PATH, path.join(exampleArchiveName, ADDON_PATH), excludePatterns);
+fullZip.writeZip(path.join(DIST_PATH, `${exampleArchiveName}.zip`));
+
+excludePatterns.push('example');
 
 // Create addon archive
 const addonZip = new AdmZip();
-addFilesToZip(addonZip, ADDON_PATH, path.join(addonArchiveName, ADDON_PATH), [
-    'example'
-]);
+addFilesToZip(addonZip, ADDON_PATH, path.join(addonArchiveName, ADDON_PATH), excludePatterns);
 addonZip.writeZip(path.join(DIST_PATH, `${addonArchiveName}.zip`));
 
 console.log(`Created archives in ${DIST_PATH}:`);
-console.log(`- ${fullArchiveName}.zip`);
+console.log(`- ${exampleArchiveName}.zip`);
 console.log(`- ${addonArchiveName}.zip`);
 
 const download_url = `${REPO_URL}/releases/download/v${packageJson.version}/${addonArchiveName}.zip`;
