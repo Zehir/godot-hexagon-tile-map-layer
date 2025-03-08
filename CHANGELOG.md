@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+### Minor Changes
+
+- 2c4ef71: Added `geometry_tile_shape` and `geometry_tile_approx_shape` properties to HexagonTileMapLayer.
+- 2c4ef71: Added TileShape sub class to store the shape of a tile for physics collision.
+- 2c4ef71: Added HexagonTileMap.geometry_horizontal_tile_corners to get Vector2 position of tile corner.
+
 ## 2.0.4
 
 ### Updated
