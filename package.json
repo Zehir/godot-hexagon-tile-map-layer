@@ -9,8 +9,8 @@
   "license": "MIT",
   "main": "plugin.gd",
   "scripts": {
-    "release": "npm run build && changeset publish",
-    "build": "node build.js"
+    "publish": "node publish.js && changeset publish",
+    "version": "node version.js && changeset version"
   },
   "keywords": [
     "godot",
