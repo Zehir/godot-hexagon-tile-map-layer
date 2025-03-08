@@ -1,18 +1,21 @@
 {
   "name": "godot-hexagon-tile-map-layer",
-  "private": true,
   "version": "2.0.4",
-  "description": "Set of tools to use hexagon based tilemap in Godot with A* pathfinding and cube coordinates system.",
+  "displayName": "Hexagon TileMapLayer",
+  "description": "A hegaxon oriented tool for Godot TileMapLayer.\nIncludes 3D Cube coordinates system, A* Path Finding",
+  "author": "Zehir",
+  "license": "MIT",
+  "main": "plugin.gd",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release": "changeset version && npm run build && changeset publish",
+    "build": "node build.js"
   },
   "keywords": [
     "godot",
     "hexagon",
     "tilemap"
   ],
-  "author": "Zehir",
-  "license": "MIT",
+  "private": true,
   "packageManager": "pnpm@10.6.1",
   "devDependencies": {
     "@changesets/cli": "^2.28.1"
