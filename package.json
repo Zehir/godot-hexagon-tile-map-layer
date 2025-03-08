@@ -1,0 +1,8 @@
+{
+    "name": "godot-hexagon-tilemaplayer",
+    "private": true,
+    "version": "2.0.4",
+    "dependencies": {
+        "@changesets/cli": "^2.28.1"
+    }
+}

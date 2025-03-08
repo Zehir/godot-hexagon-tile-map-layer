@@ -23,3 +23,5 @@ mono_crash.*.json
 !/addons/hexagon_tilemaplayer/
 
 /images/*.import
+node_modules/
+*.log
