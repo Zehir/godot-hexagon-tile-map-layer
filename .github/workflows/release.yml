@@ -50,6 +50,6 @@ jobs:
         with:
           files: dist/*.zip
           generate_release_notes: false
-          tag_name: v${{ steps.get-tag_name.outputs.tag_name }}
+          tag_name: ${{ steps.get-tag_name.outputs.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
