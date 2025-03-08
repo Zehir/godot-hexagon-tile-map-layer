@@ -45,6 +45,6 @@ jobs:
         with:
           files: dist/*.zip
           generate_release_notes: false
-          tag_name: ${{ steps.changesets.outputs.publishedPackages[0].version }}
+          tag_name: v${{ steps.changesets.outputs.publishedPackages[0].version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

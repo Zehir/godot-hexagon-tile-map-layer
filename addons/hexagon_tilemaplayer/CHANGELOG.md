@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0
+
+### Minor Changes
+
+- ac9a383: Test release
+
 ## 2.0.4
 
 ### Updated
