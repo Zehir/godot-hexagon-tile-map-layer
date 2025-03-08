@@ -18,6 +18,19 @@
 ## [br]- Cube coordinates (Vector3i): Hexagonal coordinate system
 class_name HexagonTileMapLayer extends TileMapLayer
 
+
+class TileShape:
+	var shape: Shape2D
+	var transform: Transform2D
+
+	func _init(_shape: Shape2D, _transform: Transform2D) -> void:
+		shape = _shape
+		transform = _transform
+
+	func get_for(position: Vector2) -> TileShape:
+		return TileShape.new(shape, Transform2D(transform.x, transform.y, position))
+
+
 ## [AStar2D] instance for this [HexagonTileMapLayer]. Only avaliable if [HexagonTileMapLayer.pathfinding_enabled] is true.
 var astar: AStar2D
 
@@ -70,6 +83,11 @@ signal astar_changed
 
 var _cube_to_map: Callable
 var _map_to_cube: Callable
+
+## Shape of a single tile. Based on a [ConvexPolygonShape2D] with the tile's corners. See also [member geometry_tile_approx_shape].
+var geometry_tile_shape: TileShape
+## Approximate shape of a single tile. Based on a [CapsuleShape2D]. See also [member geometry_tile_shape].
+var geometry_tile_approx_shape: TileShape
 
 ## Direction vector for each neighbor in cube coordinates.
 var cube_direction_vectors: Dictionary[TileSet.CellNeighbor, Vector3i]
@@ -382,14 +400,45 @@ func _on_tileset_changed() -> void:
 		_cube_to_map = conversion_methods.cube_to_map
 		_map_to_cube = conversion_methods.map_to_cube
 
+	var geometry_methods := HexagonTileMap.get_geometry_methods_for(tile_set.tile_offset_axis)
+	if not geometry_methods.is_empty():
+		var shape = ConvexPolygonShape2D.new()
+		shape.points = PackedVector2Array(geometry_methods.tile_corners.call(tile_set.tile_size))
+		geometry_tile_shape = TileShape.new(shape, Transform2D.IDENTITY)
+
 	if tile_set.tile_offset_axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
 		cube_direction_vectors = HexagonTileMap.cube_horizontal_direction_vectors
 		cube_side_neighbor_directions = HexagonTileMap.cube_horizontal_side_neighbor_directions
 		cube_corner_neighbor_directions = HexagonTileMap.cube_horizontal_corner_neighbor_directions
+		if tile_set.tile_size.y > tile_set.tile_size.x:
+			var shape = CapsuleShape2D.new()
+			shape.radius = tile_set.tile_size.x * 0.5
+			shape.height = tile_set.tile_size.y
+			geometry_tile_approx_shape = TileShape.new(shape, Transform2D.IDENTITY)
+		else:
+			var shape = CapsuleShape2D.new()
+			shape.radius = tile_set.tile_size.y * 0.5
+			shape.height = tile_set.tile_size.x
+			geometry_tile_approx_shape = TileShape.new(
+				shape, Transform2D.IDENTITY.rotated(PI * 0.5)
+			)
 	else:
 		cube_direction_vectors = HexagonTileMap.cube_vertical_direction_vectors
 		cube_side_neighbor_directions = HexagonTileMap.cube_vertical_side_neighbor_directions
 		cube_corner_neighbor_directions = HexagonTileMap.cube_vertical_corner_neighbor_directions
+
+		if tile_set.tile_size.x > tile_set.tile_size.y:
+			var shape = CapsuleShape2D.new()
+			shape.radius = tile_set.tile_size.y * 0.5
+			shape.height = tile_set.tile_size.x
+			geometry_tile_approx_shape = TileShape.new(
+				shape, Transform2D.IDENTITY.rotated(PI * 0.5)
+			)
+		else:
+			var shape = CapsuleShape2D.new()
+			shape.radius = tile_set.tile_size.x * 0.5
+			shape.height = tile_set.tile_size.y
+			geometry_tile_approx_shape = TileShape.new(shape, Transform2D.IDENTITY)
 
 
 ## Converts cube coordinates back to [TileMapLayer] cell coordinates.

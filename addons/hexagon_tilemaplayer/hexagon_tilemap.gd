@@ -124,7 +124,7 @@ const cube_vertical_corner_neighbor_directions: Array[TileSet.CellNeighbor] = [
 ## [/codeblock]
 static func get_conversion_methods_for(
 	axis: TileSet.TileOffsetAxis, layout: TileSet.TileLayout
-) -> Dictionary:
+) -> Dictionary[String, Callable]:
 	match axis:
 		TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
 			match layout:
@@ -768,5 +768,61 @@ static func _wedge_index_for_local_direction_for_axis(
 				)
 			)
 		)
+
+
+#endregion
+
+#region Geometry
+
+
+## Returns the geometry methods for a specific axis.
+##
+## [br]The returned dictionary contains the following methods:
+## [br]- `tile_corners`: Returns the local positions of corner a hexagon tile. See [method geometry_horizontal_tile_corners] and [method geometry_vertical_tile_corners].
+static func get_geometry_methods_for(axis: TileSet.TileOffsetAxis) -> Dictionary[String, Callable]:
+	if axis == TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL:
+		return {"tile_corners": geometry_horizontal_tile_corners}
+	else:
+		return {"tile_corners": geometry_vertical_tile_corners}
+
+
+## Returns the local positions of corner a hexagon tile in a horizontal layout.
+##
+## [br]The returned array contains the corner positions in local coordinates relative to the tile center.
+## [br]The corners are ordered in a clockwise direction starting from the top right corner.
+static func geometry_horizontal_tile_corners(tile_size: Vector2i) -> Array[Vector2]:
+	var height = tile_size.y
+	var width = tile_size.x
+	var half_height = height * 0.5
+	var half_width = width * 0.5
+	var quarter_height = height * 0.25
+	return [
+		Vector2(half_width, -quarter_height),
+		Vector2(half_width, quarter_height),
+		Vector2(0, half_height),
+		Vector2(-half_width, quarter_height),
+		Vector2(-half_width, -quarter_height),
+		Vector2(0, -half_height),
+	]
+
+
+## Returns the local positions of corner a hexagon tile in a vertical layout.
+##
+## [br]The returned array contains the corner positions in local coordinates relative to the tile center.
+## [br]The corners are ordered in a clockwise direction starting from the top right corner.
+static func geometry_vertical_tile_corners(tile_size: Vector2i) -> Array[Vector2]:
+	var height = tile_size.y
+	var width = tile_size.x
+	var half_height = height * 0.5
+	var half_width = width * 0.5
+	var quarter_width = roundi(width * 0.25)
+	return [
+		Vector2(quarter_width, -half_height),
+		Vector2(half_width, 0),
+		Vector2(quarter_width, half_height),
+		Vector2(-quarter_width, half_height),
+		Vector2(-half_width, 0),
+		Vector2(-quarter_width, -half_height),
+	]
 
 #endregion
