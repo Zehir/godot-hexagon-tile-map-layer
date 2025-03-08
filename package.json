@@ -10,7 +10,7 @@
   "main": "plugin.gd",
   "scripts": {
     "release": "node build.js && changeset publish",
-    "version": "node version.js && changeset version"
+    "version": "changeset version && node generate_plugin_cfg.js"
   },
   "keywords": [
     "godot",
