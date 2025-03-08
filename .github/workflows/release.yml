@@ -53,3 +53,12 @@ jobs:
           tag_name: ${{ steps.get-tag_name.outputs.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Godot Asset Lib
+        if: steps.changesets.outputs.published == 'true'
+        uses: deep-entertainment/godot-asset-lib-action@v0.6.0
+        with:
+          username: Zehir
+          password: ${{ secrets.ASSET_STORE_PASSWORD }}
+          assetId: 3733
+          assetTemplate: "dist/asset-template.json.hb"
