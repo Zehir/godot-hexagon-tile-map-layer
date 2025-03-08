@@ -9,7 +9,7 @@
   "license": "MIT",
   "main": "plugin.gd",
   "scripts": {
-    "publish": "node publish.js && changeset publish",
+    "release": "node build.js && changeset publish",
     "version": "node version.js && changeset version"
   },
   "keywords": [
