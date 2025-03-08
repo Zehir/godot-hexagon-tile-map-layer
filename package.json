@@ -1,6 +1,6 @@
 {
   "name": "godot-hexagon-tile-map-layer",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "displayName": "Hexagon TileMapLayer",
   "description": "A hegaxon oriented tool for Godot TileMapLayer.\nIncludes 3D Cube coordinates system, A* Path Finding",
   "author": "Zehir",
