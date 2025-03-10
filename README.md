@@ -1,3 +1,9 @@
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Zehir/godot-hexagon-tile-map-layer?include_prereleases&label=github&sort=semver)](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases)
+[![GitHub issues](https://img.shields.io/github/issues/Zehir/godot-hexagon-tile-map-layer)](https://github.com/Zehir/godot-hexagon-tile-map-layer/issues)
+[![GitHub Repo stars](https://img.shields.io/github/stars/Zehir/godot-hexagon-tile-map-layer?style=flat)](https://github.com/Zehir/godot-hexagon-tile-map-layer/stargazers)
+[![GitHub](https://img.shields.io/github/license/Zehir/godot-hexagon-tile-map-layer)](https://github.com/Zehir/godot-hexagon-tile-map-layer/blob/main/LICENSE)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Zehir/godot-hexagon-tile-map-layer/release.yml?branch=main)](https://github.com/Zehir/godot-hexagon-tile-map-layer/actions)
+
 # Godot Hexagon TileMapLayer
 
 Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube coordinates system.
