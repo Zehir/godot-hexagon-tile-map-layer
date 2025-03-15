@@ -1,14 +1,13 @@
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Zehir/godot-hexagon-tile-map-layer?include_prereleases&label=github&sort=semver)](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases)
-[![GitHub issues](https://img.shields.io/github/issues/Zehir/godot-hexagon-tile-map-layer)](https://github.com/Zehir/godot-hexagon-tile-map-layer/issues)
-[![GitHub Repo stars](https://img.shields.io/github/stars/Zehir/godot-hexagon-tile-map-layer?style=flat)](https://github.com/Zehir/godot-hexagon-tile-map-layer/stargazers)
-[![GitHub](https://img.shields.io/github/license/Zehir/godot-hexagon-tile-map-layer)](https://github.com/Zehir/godot-hexagon-tile-map-layer/blob/main/LICENSE)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Zehir/godot-hexagon-tile-map-layer/release.yml?branch=main)](https://github.com/Zehir/godot-hexagon-tile-map-layer/actions)
-
 # Godot Hexagon TileMapLayer
+[![Godot minimum version](https://img.shields.io/badge/Godot-v4.4%2B-%232C3E50?logo=godotengine&logoColor=6584C4&style=for-the-badge)](https://godotengine.org/releases/4.4/)
+[![GitHub Release](https://img.shields.io/github/v/release/Zehir/godot-hexagon-tile-map-layer?sort=semver&display_name=release&style=for-the-badge&color=2980B9)](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Zehir/godot-hexagon-tile-map-layer/total?style=for-the-badge&color=2980B9)](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases)
+[![GitHub Repo stars](https://img.shields.io/github/stars/Zehir/godot-hexagon-tile-map-layer?style=for-the-badge&color=16A085)](https://github.com/Zehir/godot-hexagon-tile-map-layer/stargazers)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/Zehir?style=for-the-badge&color=16A085)](https://github.com/sponsors/Zehir)
 
 Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube coordinates system.
 
-Require Godot 4.4+, for 4.3+ use version 1.0.1 or earlier
+Require [Godot 4.4](https://godotengine.org/releases/4.4/)+, for [4.3](https://godotengine.org/releases/4.3/)+ use version [1.0.1](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases/tag/v1.0.1) or earlier
 
 ## Features
 
