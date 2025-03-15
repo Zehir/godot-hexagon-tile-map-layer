@@ -26,9 +26,9 @@ func _ready() -> void:
 				_tile_map.tile_set.tile_offset_axis
 				== TileSet.TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL
 			):
-				demo_geometry_tile_shape(_tile_map, Vector2i(8, 0), 4.0)
+				demo_geometry_tile_shape(_tile_map, Vector2i(8, 0))
 			else:
-				demo_geometry_tile_shape(_tile_map, Vector2i(-6, 0), 4.0)
+				demo_geometry_tile_shape(_tile_map, Vector2i(-6, 0))
 			var gray_cells = _tile_map.get_used_cells_by_id(1, Vector2i(0, 0), 5)
 			if gray_cells.size() == 2:
 				demo_line(_tile_map, gray_cells[0], gray_cells[1])
@@ -37,7 +37,7 @@ func _ready() -> void:
 					_tile_map.astar_changed.connect(demo_path_finding)
 
 
-func demo_spirale(_tile_map: HexagonTileMapLayer, center: Vector2i, radius: int = 2) -> void:
+func demo_spirale(_tile_map: HexagonTileMapLayer, center: Vector2i) -> void:
 	var _center = _tile_map.map_to_cube(center)
 	var line = Line2D.new()
 	line.width = 20.0
@@ -72,9 +72,7 @@ func demo_path_finding(_tile_map: HexagonTileMapLayer, from: Vector2i, to: Vecto
 	_tile_map.add_child(line)
 
 
-func demo_geometry_tile_shape(
-	_tile_map: HexagonTileMapLayer, from: Vector2i, distance_cutoff: float
-) -> void:
+func demo_geometry_tile_shape(_tile_map: HexagonTileMapLayer, from: Vector2i) -> void:
 	var center_pos = _tile_map.map_to_local(from)
 	var collision = CollisionShape2D.new()
 	collision.shape = _tile_map.geometry_tile_shape.shape

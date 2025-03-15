@@ -14,6 +14,10 @@ config/name="Hexagon TileMapLayer"
 run/main_scene="res://addons/hexagon_tilemaplayer/example/example.tscn"
 config/features=PackedStringArray("4.4", "Mobile")
 
+[debug]
+
+gdscript/warnings/exclude_addons=false
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/hexagon_tilemaplayer/plugin.cfg")

@@ -640,6 +640,10 @@ static func cube_rect_corners(
 ## Gets all hexes at exactly a certain distance from the center.
 ##
 ## [br]See [method HexagonTileMapLayer.cube_ring] for details.
+@warning_ignore("int_as_enum_without_cast")
+@warning_ignore("int_as_enum_without_match")
+
+
 static func cube_ring_for_axis(
 	axis: TileSet.TileOffsetAxis,
 	center: Vector3i,
@@ -662,6 +666,10 @@ static func cube_ring_for_axis(
 			radius,
 			first_side
 		)
+
+
+@warning_ignore("int_as_enum_without_cast")
+@warning_ignore("int_as_enum_without_match")
 
 
 static func _cube_ring_for_neighbor(
@@ -696,6 +704,10 @@ static func _cube_ring_for_neighbor(
 ## Creates a spiral pattern starting from the center and going outward in a clockwise direction.
 ##
 ## [br]See [method HexagonTileMapLayer.cube_spiral] for details.
+@warning_ignore("int_as_enum_without_cast")
+@warning_ignore("int_as_enum_without_match")
+
+
 static func cube_spiral_for_axis(
 	axis: TileSet.TileOffsetAxis,
 	center: Vector3i,
@@ -718,6 +730,10 @@ static func cube_spiral_for_axis(
 			radius,
 			first_side
 		)
+
+
+@warning_ignore("int_as_enum_without_cast")
+@warning_ignore("int_as_enum_without_match")
 
 
 static func _cube_spiral_for_neighbor(

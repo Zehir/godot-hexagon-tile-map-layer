@@ -132,8 +132,14 @@ func _get_configuration_warnings():
 
 
 #region Pathfinding
+@warning_ignore("unused_parameter")
+
+
 func _pathfinding_get_tile_weight(coords: Vector2i) -> float:
 	return 1.0
+
+
+@warning_ignore("unused_parameter")
 
 
 func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
@@ -767,8 +773,8 @@ func cube_intersect_ranges(
 ## print(rotated_formation)  # Output: [(-1, 1, 0), (-2, 2, 0), (0, 1, -1)]
 ## [/codeblock]
 ## See also [method cube_rotate_from].
-func cube_rotate(position: Vector3i, rotations: int) -> Vector3i:
-	return HexagonTileMap.cube_rotate(position, rotations)
+func cube_rotate(cell: Vector3i, rotations: int) -> Vector3i:
+	return HexagonTileMap.cube_rotate(cell, rotations)
 
 
 ## Rotates a hex position around a center point by a number of 60-degree steps.
@@ -796,8 +802,8 @@ func cube_rotate(position: Vector3i, rotations: int) -> Vector3i:
 ## print(rotated_formation)  # Output: [(2, -1, -1), (1, 0, -1), (2, 0, -2)]
 ## [/codeblock]
 ## See also [method cube_rotate].
-func cube_rotate_from(position: Vector3i, from: Vector3i, rotations: int) -> Vector3i:
-	return HexagonTileMap.cube_rotate_from(position, from, rotations)
+func cube_rotate_from(cell: Vector3i, from: Vector3i, rotations: int) -> Vector3i:
+	return HexagonTileMap.cube_rotate_from(cell, from, rotations)
 
 
 ## Reflects a hex position across one of the three cube coordinate axes.
@@ -816,8 +822,8 @@ func cube_rotate_from(position: Vector3i, from: Vector3i, rotations: int) -> Vec
 ## print(reflect_z)  # Output: Vector3i(-1, 2, -1)
 ## [/codeblock]
 ## See also [method cube_reflect_from].
-func cube_reflect(position: Vector3i, axis: Vector3i.Axis) -> Vector3i:
-	return HexagonTileMap.cube_reflect(position, axis)
+func cube_reflect(cell: Vector3i, axis: Vector3i.Axis) -> Vector3i:
+	return HexagonTileMap.cube_reflect(cell, axis)
 
 
 ## Reflects a hex position around a center point across one of the three cube coordinate axes.
@@ -840,8 +846,8 @@ func cube_reflect(position: Vector3i, axis: Vector3i.Axis) -> Vector3i:
 ## print(mirrored)  # Output: [(-1, 0, 1), (-1, -1, 2)]
 ## [/codeblock]
 ## See also [method cube_reflect].
-func cube_reflect_from(position: Vector3i, from: Vector3i, axis: Vector3i.Axis) -> Vector3i:
-	return HexagonTileMap.cube_reflect_from(position, from, axis)
+func cube_reflect_from(cell: Vector3i, from: Vector3i, axis: Vector3i.Axis) -> Vector3i:
+	return HexagonTileMap.cube_reflect_from(cell, from, axis)
 
 
 ## Creates a rectangle-like shape on the hex grid by reflecting a corner point around a center point.
@@ -916,6 +922,10 @@ func cube_rect_corners(
 ## [/codeblock]
 ## See also [method cube_spiral].
 ## See also static version [HexagonTileMap.cube_ring_for_axis]
+@warning_ignore("int_as_enum_without_cast")
+@warning_ignore("int_as_enum_without_match")
+
+
 func cube_ring(
 	center: Vector3i, radius: int, first_side: TileSet.CellNeighbor = -1
 ) -> Array[Vector3i]:
@@ -957,6 +967,10 @@ func cube_ring(
 ## [/codeblock]
 ## See also [method cube_ring].
 ## [br]See also static version [method HexagonTileMap.cube_spiral_for_axis].
+@warning_ignore("int_as_enum_without_cast")
+@warning_ignore("int_as_enum_without_match")
+
+
 func cube_spiral(
 	center: Vector3i, radius: int, first_side: TileSet.CellNeighbor = -1
 ) -> Array[Vector3i]:
@@ -1118,6 +1132,7 @@ func get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vecto
 		while count > 0:
 			var ring = cube_ring(center_cube, current_ring_size, direction)
 			current_ring_size += 1
+			@warning_ignore("integer_division")
 			for i in ring.size() / 2 + 1:
 				cells.append(ring[i])
 				count -= 1
@@ -1131,6 +1146,7 @@ func get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vecto
 		while count > 0:
 			var ring = cube_ring(center_cube, current_ring_size, direction)
 			current_ring_size += 1
+			@warning_ignore("integer_division")
 			for i in ring.size() / 2 + 1:
 				cells.append(ring[-i])
 				count -= 1

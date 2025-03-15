@@ -1,3 +1,4 @@
+@tool
 extends HexagonTileMapLayer
 
 const TILE_HORIZONTAL = preload("tile_horizontal.png")
@@ -44,7 +45,6 @@ func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
 
 func _unhandled_input(event: InputEvent):
 	if is_visible_in_tree() and event is InputEventMouseMotion:
-		var mouse_event: InputEventMouseMotion = event as InputEventMouseMotion
 		var pos_list = get_closest_cells_from_local(get_local_mouse_position(), 4)
 		if pos_list.size() == 0:
 			return
