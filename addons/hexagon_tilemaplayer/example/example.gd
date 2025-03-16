@@ -87,3 +87,15 @@ func demo_geometry_tile_shape(_tile_map: HexagonTileMapLayer, from: Vector2i) ->
 		center_pos_approx
 	)
 	_tile_map.add_child(collision_approx)
+
+
+func demo_cube_explore(_tile_map: HexagonTileMapLayer) -> void:
+	var filter := func(tile: Vector3i, values: Array) -> bool:
+		var cell_alternative = _tile_map.get_cell_alternative_tile(_tile_map.cube_to_map(tile))
+		return cell_alternative in values
+	var line = Line2D.new()
+	line.width = 10.0
+	line.default_color = Color.WHITE
+	for point in _tile_map.cube_explore(Vector3i.ZERO, filter.bind([1]), filter.bind([0, 4])):
+		line.add_point(_tile_map.cube_to_local(point))
+	_tile_map.add_child(line)

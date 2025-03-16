@@ -1163,3 +1163,89 @@ func get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vecto
 					return cells
 	# For the linter, will never happen
 	return []
+
+
+## Explores hexes from a starting point based on filter and traversal conditions.
+##
+## [br]Performs a flood-fill exploration of the hex grid, collecting hexes that match the [param filter]
+## condition. Exploration continues through hexes that match either [param filter] OR [param maybe].
+## [br][b]Parameters:[/b]
+## [br]- [param start]: The starting hex in cube coordinates
+## [br]- [param filter]: A Callable returning bool - if true, include this hex in results and explore through it
+## [br]- [param maybe]: A Callable returning bool - if true, explore through this hex (but don't include in results)
+##
+## [codeblock]
+## # Find all connected water tiles
+## var water_tiles = tilemap.cube_explore(
+##     start_position,
+##     # Only collect deep water
+##     func(pos): return is_deep_water(pos),
+##     # Maybe traverse shallow water
+##     func(pos): return is_shallow_water(pos)
+## )
+## [/codeblock]
+## [codeblock]
+## # Find all cells of same type up to a maximum distance
+## var max_distance = 3
+## var matching_tiles = tilemap.cube_explore(
+##     start_position,
+##     func(pos):
+##         # Include tiles of same type within distance limit
+##         return get_cell_type(pos) == target_type and \
+##                cube_distance(start_position, pos) <= max_distance,
+##     func(pos): return false  # Don't traverse non-matching tiles
+## )
+## [/codeblock]
+## [codeblock]
+## # Find terrain until reaching obstacles
+## var visible_area = tilemap.cube_explore(
+##     player_position,
+##     func(pos):
+##         # Stop at walls, include everything else
+##         return get_cell_type(pos) != CELL_TYPE_WALL,
+##     func(pos): return false  # Don't traverse through anything special
+## )
+## [/codeblock]
+## [codeblock]
+## # Find connected tiles by their alternative tile value
+## var filter := func(tile: Vector3i, cell_alternatives: Array) -> bool:
+##     var cell_alternative = _tile_map.get_cell_alternative_tile(_tile_map.cube_to_map(tile))
+##     return cell_alternative in cell_alternatives
+##
+## # Find tiles with alternative=1, traversing through tiles with alternative=0 or 4
+## var connected = _tile_map.cube_explore(
+##     Vector3i.ZERO,
+##     filter.bind([1]),      # Collect tiles with alternative=1
+##     filter.bind([0, 4])    # Allow traversing through tiles with alternative=0 or 4
+## )
+## [/codeblock]
+func cube_explore(
+	start: Vector3i, filter: Callable, maybe: Callable = func(_pos): return false
+) -> Array[Vector3i]:
+	var result: Array[Vector3i] = []
+	var visited: Dictionary[Vector3i, bool] = {}
+	var queue: Array[Vector3i] = [start]
+
+	visited[start] = true
+	if filter.call(start):
+		result.append(start)
+
+	while not queue.is_empty():
+		var current = queue.pop_front()
+
+		# Check all neighbors
+		for neighbor in cube_neighbors(current):
+			if neighbor in visited:
+				continue
+
+			visited[neighbor] = true
+
+			var is_filtered = filter.call(neighbor)
+
+			if is_filtered:
+				result.append(neighbor)
+
+			if is_filtered or maybe.call(neighbor):
+				queue.append(neighbor)
+
+	return result
