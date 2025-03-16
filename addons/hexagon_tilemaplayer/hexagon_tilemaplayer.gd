@@ -19,14 +19,19 @@
 class_name HexagonTileMapLayer extends TileMapLayer
 
 
+## Shape of a single tile, based on a [Shape2D] and a [Transform2D] for positioning and rotation.
+## See also [member geometry_tile_shape] and [member geometry_tile_approx_shape].
 class TileShape:
+	## Shape of the tile.
 	var shape: Shape2D
+	## Transform of the tile.
 	var transform: Transform2D
 
 	func _init(_shape: Shape2D, _transform: Transform2D) -> void:
 		shape = _shape
 		transform = _transform
 
+	## Returns a copy of the tile shape with a new position.
 	func get_for(position: Vector2) -> TileShape:
 		return TileShape.new(shape, Transform2D(transform.x, transform.y, position))
 
@@ -1156,4 +1161,5 @@ func get_closest_cells_from_local(local: Vector2, count: int = 1) -> Array[Vecto
 				count -= 1
 				if count < 0:
 					return cells
-	return []  # For the linter, will never happen
+	# For the linter, will never happen
+	return []
