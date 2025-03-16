@@ -540,5 +540,3 @@ debug_mode = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.6, 0.6)
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
