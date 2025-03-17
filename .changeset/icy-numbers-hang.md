@@ -2,4 +2,4 @@
 "hexagon-tile-map-layer": patch
 ---
 
-Add missing documentation about TileShape class.
+Added missing documentation about TileShape class.
