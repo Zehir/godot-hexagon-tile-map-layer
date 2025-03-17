@@ -813,12 +813,12 @@ static func geometry_horizontal_tile_corners(tile_size: Vector2i) -> Array[Vecto
 	var half_width = width * 0.5
 	var quarter_height = height * 0.25
 	return [
+		Vector2(0, -half_height),
 		Vector2(half_width, -quarter_height),
 		Vector2(half_width, quarter_height),
 		Vector2(0, half_height),
 		Vector2(-half_width, quarter_height),
 		Vector2(-half_width, -quarter_height),
-		Vector2(0, -half_height),
 	]
 
 
