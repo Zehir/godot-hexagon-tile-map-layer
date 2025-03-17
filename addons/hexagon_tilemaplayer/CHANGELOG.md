@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.2.0
+
+### Minor Changes
+
+- 7fc7a51: Added method `cube_outlines` to generate outline for a group of hex cells.
+- cfd2915: Added method `cube_explore` to explores hexes from a starting point based on filter and traversal conditions.
+
+### Patch Changes
+
+- b8e2a6b: Renamed various variables and added @warning_ignore where needed to suppress warnings.
+- afecf5f: Added missing documentation about TileShape class.
+- d88bbf0: Fixed Vector2 return order in function `geometry_horizontal_tile_corners` to match the vertical version
+
 ## 2.1.0
 
 ### Minor Changes
