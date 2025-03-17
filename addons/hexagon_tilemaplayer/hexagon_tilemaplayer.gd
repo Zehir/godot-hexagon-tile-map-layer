@@ -1249,3 +1249,86 @@ func cube_explore(
 				queue.append(neighbor)
 
 	return result
+
+
+## Generates outline for a group of connected or not hex cells.
+##
+## [br]Takes an array of hex positions in cube coordinates and returns an array of outlines, where each outline is an array of [Vector2] points in the tilemap's local space.
+## [br]This is useful for creating visual borders or selection indicators around groups of hexes.
+## [br]The returned outlines are not closed polygons. You could have multiple outlines for a group of cells, depending on their shape (e.g. a group of cells forming a ring).
+## [codeblock]
+## # Create an outline for a group of cells
+## var cells = [Vector3i(0,0,0), Vector3i(1,-1,0), Vector3i(1,0,-1)]
+## var outlines = tilemap.cube_outlines(cells)
+## print(outlines)  # Output: [[[x1,y1], [x2,y2], ...]] - Array of point arrays
+## [/codeblock]
+## [codeblock]
+## # Visualize the outline with a Line2D
+## var line = Line2D.new()
+## line.width = 4
+## line.default_color = Color.YELLOW
+## line.closed = true
+## # Each outline is a separate closed polygon
+## for outline in outlines:
+##     for point in outline:
+##         line.add_point(point)
+##     line.add_point(outline[0])  # Close the polygon
+## tilemap.add_child(line)
+## [/codeblock]
+func cube_outlines(cells: Array[Vector3i]) -> Array[Array]:
+	# See also https://github.com/godotengine/godot-proposals/issues/9127 for a proposal to have polygons with holes
+	# Step 1: Generate all edge segments from cells
+	var edges: Array[Array] = []
+	var corners = (geometry_tile_shape.shape as ConvexPolygonShape2D).points
+	for cell in cells:
+		var cell_center: Vector2 = cube_to_local(cell)
+		for i in 6:
+			var neighbor = cube_neighbor(cell, cube_side_neighbor_directions[i])
+			if not cells.has(neighbor):
+				var point_1: Vector2 = cell_center + corners[i]
+				var point_2: Vector2 = cell_center + corners[(i + 1) % 6]
+				edges.append([point_1, point_2])
+	corners = null
+
+	# Step 2: Create a list of outlines
+	var outlines: Array[Array] = []
+	while not edges.is_empty():
+		var current_outline: Array[Vector2] = []
+		var start_edge: Array = edges.pop_front()
+		var current_point: Vector2 = start_edge[0]
+		var next_point: Vector2 = start_edge[1]
+
+		current_outline.append(current_point)
+
+		# Safety limit
+		for _loop in edges.size():
+			current_outline.append(next_point)
+
+			if next_point.distance_squared_to(current_outline[0]) < 1.0:
+				current_outline.pop_back()
+				break
+
+			var found = false
+			for i in edges.size():
+				var edge = edges[i]
+				if next_point.distance_squared_to(edge[0]) < 1.0:
+					current_point = next_point
+					next_point = edge[1]
+					edges.remove_at(i)
+					found = true
+					break
+				elif next_point.distance_squared_to(edge[1]) < 1.0:
+					current_point = next_point
+					next_point = edge[0]
+					edges.remove_at(i)
+					found = true
+					break
+
+			if not found:
+				push_error("Could not find the next edge in the loop")
+				break
+
+		if current_outline.size() > 2:
+			outlines.append(current_outline)
+
+	return outlines

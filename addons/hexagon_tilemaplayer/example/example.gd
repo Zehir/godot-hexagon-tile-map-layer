@@ -20,6 +20,7 @@ func _unhandled_input(event: InputEvent):
 func _ready() -> void:
 	for _tile_map: HexagonTileMapLayer in find_children("*", "HexagonTileMapLayer"):
 		if _tile_map.is_visible_in_tree():
+			demo_cube_explore_outline(_tile_map)
 			demo_spirale(_tile_map, Vector2i(0, 0))
 
 			if (
@@ -89,13 +90,16 @@ func demo_geometry_tile_shape(_tile_map: HexagonTileMapLayer, from: Vector2i) ->
 	_tile_map.add_child(collision_approx)
 
 
-func demo_cube_explore(_tile_map: HexagonTileMapLayer) -> void:
+func demo_cube_explore_outline(_tile_map: HexagonTileMapLayer) -> void:
 	var filter := func(tile: Vector3i, values: Array) -> bool:
 		var cell_alternative = _tile_map.get_cell_alternative_tile(_tile_map.cube_to_map(tile))
 		return cell_alternative in values
-	var line = Line2D.new()
-	line.width = 10.0
-	line.default_color = Color.WHITE
-	for point in _tile_map.cube_explore(Vector3i.ZERO, filter.bind([1]), filter.bind([0, 4])):
-		line.add_point(_tile_map.cube_to_local(point))
-	_tile_map.add_child(line)
+
+	var cells = _tile_map.cube_explore(Vector3i.ZERO, filter.bind([1]), filter.bind([0, 4]))
+	var outlines = _tile_map.cube_outlines(cells)
+	for outline in outlines:
+		var line = Line2D.new()
+		line.points = outline
+		line.closed = true
+		line.default_color = Color.YELLOW
+		_tile_map.add_child(line)
