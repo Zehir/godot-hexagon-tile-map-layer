@@ -841,4 +841,80 @@ static func geometry_vertical_tile_corners(tile_size: Vector2i) -> Array[Vector2
 		Vector2(-quarter_width, -half_height),
 	]
 
+
 #endregion
+
+
+## Updates the layout of a hex tilemap while preserving the logical positions of all tiles.
+##
+## [br]When changing a tilemap's layout (e.g., from stacked to diamond), this function ensures
+## all tiles maintain their relative positions by converting them through the cube coordinate system.
+## [br][color=yellow][b]Note:[/b][/color] This function only updates the positions of existing tiles. It does not modify
+## the tileset's properties like cell size, offset, or other configuration parameters. You'll need to
+## adjust those manually if needed.
+## [br][b]Parameters:[/b]
+## [br]- [param tilemap]: The HexagonTileMapLayer to update
+## [br]- [param from]: The current/source TileSet.TileLayout
+## [br]- [param to]: The desired/target TileSet.TileLayout
+## [codeblock]
+## # Convert a map from stacked to diamond layout
+## HexagonTileMap.update_cells_layout(
+##     my_tilemap,
+##     TileSet.TileLayout.TILE_LAYOUT_STACKED,
+##     TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT
+## )
+## [/codeblock]
+## [codeblock]
+## # Add a layout switcher to your game
+## func _on_layout_button_pressed():
+##     var current_layout = tilemap.tile_set.tile_layout
+##     var new_layout
+##
+##     match current_layout:
+##         TileSet.TileLayout.TILE_LAYOUT_STACKED:
+##             new_layout = TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT
+##         TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT:
+##             new_layout = TileSet.TileLayout.TILE_LAYOUT_STAIRS_RIGHT
+##         _:
+##             new_layout = TileSet.TileLayout.TILE_LAYOUT_STACKED
+##
+##     HexagonTileMap.update_cells_layout(tilemap, current_layout, new_layout)
+##
+##     # Update the tilemap with the new layout
+##     tilemap.tile_set.tile_layout = new_layout
+##     tilemap.pathfinding_generate_points()
+##     tilemap._draw_debug.call_deferred()
+## [/codeblock]
+static func update_cells_layout(
+	tilemap: HexagonTileMapLayer, from: TileSet.TileLayout, to: TileSet.TileLayout
+):
+	var from_conversion = get_conversion_methods_for(tilemap.tile_set.tile_offset_axis, from)
+	var to_conversion = get_conversion_methods_for(tilemap.tile_set.tile_offset_axis, to)
+
+	tilemap.tile_set.tile_layout = to
+
+	var tiles = []  # Record<Vector3i, TileData>
+	for pos in tilemap.get_used_cells():
+		(
+			tiles
+			. append(
+				[
+					from_conversion.map_to_cube.call(pos),
+					tilemap.get_cell_source_id(pos),
+					tilemap.get_cell_atlas_coords(pos),
+					tilemap.get_cell_alternative_tile(pos),
+				]
+			)
+		)
+		tilemap.erase_cell(pos)
+
+	for tile in tiles:
+		(
+			tilemap
+			. set_cell(
+				to_conversion.cube_to_map.call(tile[0]),
+				tile[1],
+				tile[2],
+				tile[3],
+			)
+		)

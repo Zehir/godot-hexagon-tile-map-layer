@@ -37,51 +37,12 @@ func _on_fix_layout_pressed(old_layout: int):
 		return
 
 	var tilemap: HexagonTileMapLayer = selection[0]
-	var old_conversion_methods := HexagonTileMap.get_conversion_methods_for(
-		tilemap.tile_set.tile_offset_axis, old_layout
-	)
-	var new_conversion_methods := HexagonTileMap.get_conversion_methods_for(
-		tilemap.tile_set.tile_offset_axis, tilemap.tile_set.tile_layout
-	)
-
-	if old_conversion_methods.is_empty() or new_conversion_methods.is_empty():
-		#EditorInterface.get_editor_toaster() # TODO wait for 4.4
-		return
-
 	var undo_redo = plugin.get_undo_redo()
 	undo_redo.create_action("Fix Filemap")
 	undo_redo.add_do_method(
-		self, "_do_fix_layout", tilemap, old_conversion_methods, new_conversion_methods
+		HexagonTileMap, "update_cells_layout", tilemap, old_layout, tilemap.tile_set.tile_layout
 	)
 	undo_redo.add_undo_method(
-		self, "_do_fix_layout", tilemap, new_conversion_methods, old_conversion_methods
+		HexagonTileMap, "update_cells_layout", tilemap, tilemap.tile_set.tile_layout, old_layout
 	)
 	undo_redo.commit_action()
-
-
-func _do_fix_layout(tilemap: HexagonTileMapLayer, from: Dictionary, to: Dictionary):
-	var tiles = []  # Record<Vector3i, TileData>
-	for pos in tilemap.get_used_cells():
-		(
-			tiles
-			. append(
-				[
-					from.map_to_cube.call(pos),
-					tilemap.get_cell_source_id(pos),
-					tilemap.get_cell_atlas_coords(pos),
-					tilemap.get_cell_alternative_tile(pos),
-				]
-			)
-		)
-		tilemap.erase_cell(pos)
-
-	for tile in tiles:
-		(
-			tilemap
-			. set_cell(
-				to.cube_to_map.call(tile[0]),
-				tile[1],
-				tile[2],
-				tile[3],
-			)
-		)
