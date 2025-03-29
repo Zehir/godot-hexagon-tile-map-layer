@@ -8,8 +8,9 @@ const CubeLinedraw = preload("uid://sh0b67wxk8us")
 var current_method: Node
 
 const methods: Dictionary[String, GDScript] = {
-	"cube_linedraw": preload("uid://sh0b67wxk8us"),
+	"cube_neighbor": preload("uid://cykasr1p4xfed"),
 	"cube_direction": preload("uid://cwjv67kxuu1li"),
+	"cube_linedraw": preload("uid://sh0b67wxk8us"),
 }
 
 

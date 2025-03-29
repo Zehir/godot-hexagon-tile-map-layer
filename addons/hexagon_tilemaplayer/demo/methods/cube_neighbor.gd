@@ -6,6 +6,7 @@ var line: Line2D
 var tween: Tween
 var current_index: int = -1
 var neighbors: Array = []
+var center_cell = Vector3i(3, -2, -1)
 
 enum CellNeighbor {
 	RIGHT_SIDE = 0,
@@ -53,11 +54,14 @@ func _ready() -> void:
 	tween.tween_callback(update_tile)
 	tween.tween_interval(1)
 
-	var center_tile = demo.tile_map.cube_to_local(Vector3i.ZERO)
+	var center_tile = demo.tile_map.cube_to_local(center_cell)
 	line.add_point(center_tile)
 	line.add_point(center_tile)
 
 	demo.camera_2d.focus_tile(center_tile)
+
+	var tile = demo.tile_map.get_or_make_debug_tile_with_color(0, Color.YELLOW)
+	tile.position = center_tile
 
 
 func update_tile() -> void:
@@ -68,21 +72,25 @@ func update_tile() -> void:
 	label.push_color(Color.from_string("CBCDD0", Color.WHITE))
 
 	label.append_text("[color=C45C6D]var[/color] ")
+	label.append_text("[color=yellow]center_cell[/color] = %s\n" % var_to_str(center_cell))
+
+	label.append_text("[color=C45C6D]var[/color] ")
 	label.append_text("[color=%s]cell[/color] = " % Color.GREEN.to_html())
-	label.append_text("[color=57B2FF]cube_direction[/color](\n")
+	label.append_text("[color=57B2FF]cube_neighbor[/color](\n")
+	label.append_text("\tcenter_cell,\n")
 	label.append_text(
 		"\t[color=8CF9D6]TileSet[/color].[color=BCE0FF]CELL_NEIGHBOR_\n\t%s[/color]\n" % neighbor[1]
 	)
-	label.append_text(") * 2\n\n")
+	label.append_text(")\n\n")
 
 	var tile: Sprite2D
 
 	for neighbor_index in neighbors.size():
 		tile = demo.tile_map.get_or_make_debug_tile(
-			neighbor_index, remap(neighbor_index, 0, 11, 0.0, 1.0)
+			neighbor_index + 1, remap(neighbor_index, 0, 11, 0.0, 1.0)
 		)
 		tile.position = demo.tile_map.cube_to_local(
-			demo.tile_map.cube_direction(neighbors[neighbor_index][0]) * 2
+			demo.tile_map.cube_neighbor(center_cell, neighbors[neighbor_index][0])
 		)
 
 		var key: String = CellNeighbor.find_key(neighbors[neighbor_index][0])
@@ -100,9 +108,9 @@ func update_tile() -> void:
 		if neighbor_index == 5:
 			label.append_text("\n")
 
-	var position = demo.tile_map.cube_direction(neighbor[0]) * 2
-	tile = demo.tile_map.get_or_make_debug_tile_with_color(12, Color.GREEN)
+	var position = demo.tile_map.cube_neighbor(center_cell, neighbor[0])
+	tile = demo.tile_map.get_or_make_debug_tile_with_color(13, Color.GREEN)
 	tile.position = demo.tile_map.cube_to_local(position)
 	line.points[1] = tile.position
-	demo.tile_map.show_debug_tiles(12)
+	demo.tile_map.show_debug_tiles(13)
 	label.pop_all()
