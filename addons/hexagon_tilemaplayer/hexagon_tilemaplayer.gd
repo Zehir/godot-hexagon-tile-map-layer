@@ -661,6 +661,26 @@ func cube_distance(a: Vector3i, b: Vector3i) -> int:
 	return HexagonTileMap.cube_distance(a, b)
 
 
+## Rounds a fractional cube coordinate to the nearest valid hex coordinate.
+##
+## [br]Takes a Vector3 with floating point components and converts it to the nearest
+## valid hex cube coordinate (Vector3i with integer components) while maintaining
+## the cube coordinate constraint (x + y + z = 0).
+## [br]This is essential when converting from pixel coordinates to hex grid positions,
+## performing interpolation between hex coordinates, or implementing line drawing algorithms.
+## [br][b]Parameters:[/b]
+## [br]- [param frac]: The fractional cube coordinate to round (Vector3)
+## [br][b]Returns:[/b] The nearest valid hex coordinate as Vector3i
+## [codeblock]
+## # Round a fractional cube coordinate
+## var fractional = Vector3(2.7, -1.3, -1.4)
+## var hex_pos = HexagonTileMap.cube_round(fractional)
+## print(hex_pos)  # Output: Vector3i(3, -1, -2)
+## [/codeblock]
+func cube_round(frac: Vector3) -> Vector3i:
+	return HexagonTileMap.cube_round(frac)
+
+
 ## Returns all hexes that form a line between two points.
 ##
 ## [br]Uses a linear interpolation to determine which hexes should be included in the line. Perfect for implementing line-of-sight, ranged attacks, or drawing paths between two points.
