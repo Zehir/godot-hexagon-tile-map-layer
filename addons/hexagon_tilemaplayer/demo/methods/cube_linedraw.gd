@@ -22,7 +22,6 @@ func _exit_tree() -> void:
 	demo.tile_map.show_debug_tiles(-1)
 	line.queue_free()
 
-
 func _ready() -> void:
 	demo.tile_map.hovering_tile = Vector3i(3, -2, -1)
 	_on_tile_changed()

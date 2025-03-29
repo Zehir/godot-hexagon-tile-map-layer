@@ -27,7 +27,10 @@ func _on_item_selected() -> void:
 	var selected = get_selected()
 	if current_method:
 		current_method.queue_free()
+		demo.sample_code.clear()
 	var script = selected.get_metadata(0)
 	if script is GDScript:
 		current_method = script.new(demo)
 		add_child(current_method)
+	else:
+		demo.sample_code.add_text("Please select a method on the left to view the result.")

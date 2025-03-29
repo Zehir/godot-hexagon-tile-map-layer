@@ -179,7 +179,7 @@ size_flags_vertical = 3
 focus_mode = 0
 script = ExtResource("7_3xb6e")
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer"]
+[node name="CodeContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer"]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -187,18 +187,21 @@ size_flags_vertical = 0
 mouse_force_pass_scroll_events = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_3xb6e")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/CodeContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="SampleCode" type="RichTextLabel" parent="CanvasLayer/MarginContainer/PanelContainer/MarginContainer"]
+[node name="SampleCode" type="RichTextLabel" parent="CanvasLayer/MarginContainer/CodeContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
 bbcode_enabled = true
 text = "Sample Code + Result"
+context_menu_enabled = true
+selection_enabled = true
 
 [connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/LayoutHorizontal" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_offset_horizontal_pressed"]
 [connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/LayoutVertical" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_offset_vertical_pressed"]
