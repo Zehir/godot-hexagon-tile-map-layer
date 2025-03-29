@@ -36,6 +36,8 @@ class TileShape:
 		return TileShape.new(shape, Transform2D(transform.x, transform.y, position))
 
 
+var _current_tile_set: TileSet
+
 ## [AStar2D] instance for this [HexagonTileMapLayer]. Only avaliable if [HexagonTileMapLayer.pathfinding_enabled] is true.
 var astar: AStar2D
 
@@ -106,7 +108,9 @@ func _enter_tree() -> void:
 	if Engine.is_editor_hint():
 		tile_set.changed.connect(update_configuration_warnings)
 	else:
+		_current_tile_set = tile_set
 		tile_set.changed.connect(_on_tileset_changed)
+		changed.connect(_on_changed)
 
 
 func _exit_tree() -> void:
@@ -114,6 +118,7 @@ func _exit_tree() -> void:
 		tile_set.changed.disconnect(update_configuration_warnings)
 	else:
 		tile_set.changed.disconnect(_on_tileset_changed)
+		changed.disconnect(_on_changed)
 
 
 func _ready() -> void:
@@ -123,7 +128,7 @@ func _ready() -> void:
 	_on_tileset_changed()
 
 	if pathfinding_enabled:
-		astar_changed.connect(_draw_debug, Object.CONNECT_DEFERRED)
+		astar_changed.connect(_draw_debug, CONNECT_DEFERRED + CONNECT_ONE_SHOT)
 		pathfinding_generate_points()
 	else:
 		_draw_debug.call_deferred()
@@ -398,6 +403,16 @@ func cube_to_local(cube_position: Vector3i) -> Vector2:
 ## See also: [method cube_to_local]
 func local_to_cube(map_position: Vector2) -> Vector3i:
 	return map_to_cube(local_to_map(map_position))
+
+
+func _on_changed() -> void:
+	if _current_tile_set != tile_set:
+		if _current_tile_set:
+			_current_tile_set.changed.disconnect(_on_tileset_changed)
+		_current_tile_set = tile_set
+		if _current_tile_set:
+			_current_tile_set.changed.connect(_on_tileset_changed)
+			_on_tileset_changed()
 
 
 # Callback to update the static data and conversions methods when the tileset changed.
