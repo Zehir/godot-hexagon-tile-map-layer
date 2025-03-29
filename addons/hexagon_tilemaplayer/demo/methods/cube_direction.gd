@@ -75,8 +75,10 @@ func update_tile() -> void:
 	)
 	label.append_text(")\n\n")
 
+	var tile: Sprite2D
+
 	for neighbor_index in neighbors.size():
-		var tile = demo.tile_map.get_or_make_debug_tile(
+		tile = demo.tile_map.get_or_make_debug_tile(
 			neighbor_index, remap(neighbor_index, 0, 11, 0.0, 1.0)
 		)
 		tile.position = demo.tile_map.cube_to_local(
@@ -86,16 +88,20 @@ func update_tile() -> void:
 		var key: String = CellNeighbor.find_key(neighbors[neighbor_index][0])
 		label.push_color(tile.self_modulate)
 		label.append_text("# %s" % key)
-		label.pop()
 		if neighbor_index == current_index:
-			label.append_text(" <--")
+			label.add_text(" ")
+			if demo.tile_map.tile_set.tile_offset_axis == TileSet.TILE_OFFSET_AXIS_HORIZONTAL:
+				label.add_image(demo.tile_map.TILE_HORIZONTAL, 0, 20, Color.GREEN)
+			else:
+				label.add_image(demo.tile_map.TILE_VERTICAL, 0, 20, Color.GREEN)
+		label.pop()
 		label.newline()
 
 		if neighbor_index == 5:
 			label.append_text("\n")
 
 	var position = demo.tile_map.cube_direction(neighbor[0])
-	var tile = demo.tile_map.get_or_make_debug_tile_with_color(12, Color.GREEN)
+	tile = demo.tile_map.get_or_make_debug_tile_with_color(12, Color.GREEN)
 	tile.position = demo.tile_map.cube_to_local(position)
 	line.points[1] = tile.position
 	demo.tile_map.show_debug_tiles(13)
