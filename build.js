@@ -95,6 +95,8 @@ function getDescriptionFromReadme() {
     return `${firstParagraph}\n\nFeatures:\n${features}`;
 }
 
+const image_url = (name) => `${REPO_URL.replace('github.com', 'raw.githubusercontent.com')}/main/images/${name}.png`;
+
 // Create asset template
 const assetTemplate = {
     "title": packageJson.displayName,
@@ -108,7 +110,14 @@ const assetTemplate = {
     "download_url": download_url,
     "browse_url": REPO_URL,
     "issues_url": `${REPO_URL}/issues`,
-    "icon_url": `${REPO_URL.replace('github.com', 'raw.githubusercontent.com')}/main/images/hexagon_tilemaplayer.png`,
+    "icon_url": image_url("hexagon_tilemaplayer"),
+    "previews": [
+        {
+            "preview_id": "1",
+            "type": "image",
+            "link": image_url("cube_linedraw"),
+        },
+    ],
 };
 
 // Write asset template to dist
