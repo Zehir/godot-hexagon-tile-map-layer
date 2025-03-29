@@ -1,13 +1,25 @@
-[gd_scene load_steps=8 format=4 uid="uid://sb5qw0ue2vc4"]
+[gd_scene load_steps=10 format=4 uid="uid://sb5qw0ue2vc4"]
 
-[ext_resource type="Script" uid="uid://buj6ft1vvdf2f" path="res://addons/hexagon_tilemaplayer/hexagon_tilemaplayer.gd" id="1_3viof"]
 [ext_resource type="Script" uid="uid://c5t8k8u70hsgr" path="res://addons/hexagon_tilemaplayer/demo/demo_manager.gd" id="1_5hvkt"]
 [ext_resource type="TileSet" uid="uid://brm40hxx3wp8n" path="res://addons/hexagon_tilemaplayer/demo/horizontal_tile_set.tres" id="2_2pem3"]
 [ext_resource type="TileSet" uid="uid://l4anov1m1f53" path="res://addons/hexagon_tilemaplayer/demo/vertical_tile_set.tres" id="2_i68m5"]
+[ext_resource type="Script" uid="uid://dfjog7h4t2dnb" path="res://addons/hexagon_tilemaplayer/demo/demo_tilemap.gd" id="3_8d2kc"]
 [ext_resource type="Script" uid="uid://t5kjk00fsm7k" path="res://addons/hexagon_tilemaplayer/demo/camera_movement.gd" id="4_2pem3"]
 [ext_resource type="Script" uid="uid://g7xok3nunrdd" path="res://addons/hexagon_tilemaplayer/demo/left_menu.gd" id="6_tv2ty"]
+[ext_resource type="Script" uid="uid://dluinrvbd8kxf" path="res://addons/hexagon_tilemaplayer/demo/demo_methods.gd" id="7_3xb6e"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_2pem3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xb6e"]
+bg_color = Color(0.113725, 0.133333, 0.160784, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
 
 [node name="Demo" type="Node2D"]
 
@@ -19,7 +31,7 @@ script = ExtResource("1_5hvkt")
 unique_name_in_owner = true
 tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAD8/wMAAQAAAAAABQD9/wIAAQAAAAAABQD8/wIAAQAAAAAABQD7/wEAAQAAAAAABQD7/wAAAQAAAAAABQD7////AQAAAAAABQD8//7/AQAAAAAABQD8/wEAAQAAAAAABQD8/wAAAQAAAAAABQD3//n/AQAAAAAAAgD3//r/AQAAAAAAAgD3//v/AQAAAAAAAgD3//z/AQAAAAAAAgD3//3/AQAAAAAAAgD3//7/AQAAAAAAAgD3////AQAAAAAAAgD3/wAAAQAAAAAAAgD3/wEAAQAAAAAAAgD3/wIAAQAAAAAAAgD3/wMAAQAAAAAAAgD3/wQAAQAAAAAAAgD3/wUAAQAAAAAAAgD3/wYAAQAAAAAAAgD4//n/AQAAAAAAAgD4//r/AQAAAAAAAgD4//v/AQAAAAAAAgD4//z/AQAAAAAAAgD4//3/AQAAAAAAAgD4//7/AQAAAAAAAgD4////AQAAAAAAAgD4/wAAAQAAAAAAAgD4/wEAAQAAAAAAAgD4/wIAAQAAAAAAAgD4/wMAAQAAAAAAAgD4/wQAAQAAAAAAAgD4/wUAAQAAAAAAAgD4/wYAAQAAAAAAAgD5//n/AQAAAAAAAgD5//r/AQAAAAAAAgD5/wIAAQAAAAAAAgD5/wMAAQAAAAAAAgD5/wQAAQAAAAAAAgD5/wUAAQAAAAAAAgD5/wYAAQAAAAAAAgD6//n/AQAAAAAAAgD6//r/AQAAAAAAAgD6//3/AQAAAAAABQD6//7/AQAAAAAABQD6////AQAAAAAABQD6/wQAAQAAAAAAAgD6/wUAAQAAAAAAAgD6/wYAAQAAAAAAAgD7//n/AQAAAAAAAgD7//r/AQAAAAAAAgD7//z/AQAAAAAABQD7//3/AQAAAAAABQD7//7/AQAAAAAABQD7/wYAAQAAAAAAAgD8//n/AQAAAAAAAgD8//r/AQAAAAAAAgD8//z/AQAAAAAABQD8/wYAAQAAAAAAAgD9//n/AQAAAAAAAgD9/wYAAQAAAAAAAgD+/wYAAQAAAAAAAgD//wYAAQAAAAAAAgAAAPn/AQAAAAAAAgAAAAUAAQAAAAAAAgAAAAYAAQAAAAAAAgABAPn/AQAAAAAAAgABAAYAAQAAAAAAAgACAPn/AQAAAAAAAgADAPn/AQAAAAAAAgAEAPn/AQAAAAAAAgAFAPn/AQAAAAAAAgAFAPr/AQAAAAAAAgAFAPv/AQAAAAAAAgAFAPz/AQAAAAAAAgAFAP3/AQAAAAAAAgAFAAUAAQAAAAAAAgAFAAYAAQAAAAAAAgAGAPn/AQAAAAAAAgAGAPr/AQAAAAAAAgAGAPv/AQAAAAAAAgAGAPz/AQAAAAAAAgAGAP3/AQAAAAAAAgAGAP7/AQAAAAAAAgAGAP//AQAAAAAAAgAGAAEAAQAAAAAAAgAGAAMAAQAAAAAAAgAGAAQAAQAAAAAAAgAGAAUAAQAAAAAAAgAGAAYAAQAAAAAAAgAHAPn/AQAAAAAAAgAHAPr/AQAAAAAAAgAHAPv/AQAAAAAAAgAHAPz/AQAAAAAAAgAHAP3/AQAAAAAAAgAHAP7/AQAAAAAAAgAHAP//AQAAAAAAAgAHAAAAAQAAAAAAAgAHAAEAAQAAAAAAAgAHAAIAAQAAAAAAAgAHAAMAAQAAAAAAAgAHAAQAAQAAAAAAAgAHAAUAAQAAAAAAAgAHAAYAAQAAAAAAAgAAAAIAAQAAAAAAAQAAAAEAAQAAAAAAAQABAAAAAQAAAAAAAQABAP//AQAAAAAAAQACAP7/AQAAAAAAAQACAP3/AQAAAAAAAQADAPz/AQAAAAAAAQADAPv/AQAAAAAAAQAEAPr/AQAAAAAAAQADAPr/AQAAAAAAAQACAPr/AQAAAAAAAQABAPr/AQAAAAAAAQAAAPr/AQAAAAAAAQD///n/AQAAAAAAAQD+//n/AQAAAAAAAQD+//r/AQAAAAAAAQD9//r/AQAAAAAAAQD8//v/AQAAAAAAAQD7//v/AQAAAAAAAQD6//v/AQAAAAAAAQD5//v/AQAAAAAAAQD5//z/AQAAAAAAAQD5//3/AQAAAAAAAQD6//z/AQAAAAAAAQD5//7/AQAAAAAAAQD5////AQAAAAAAAQD5/wAAAQAAAAAAAQD5/wEAAQAAAAAAAQD6/wAAAQAAAAAAAQD6/wEAAQAAAAAAAQD6/wIAAQAAAAAAAQD6/wMAAQAAAAAAAQD7/wIAAQAAAAAAAQD7/wMAAQAAAAAAAQD7/wQAAQAAAAAAAQD7/wUAAQAAAAAAAQD8/wQAAQAAAAAAAQD8/wUAAQAAAAAAAQD9/wQAAQAAAAAAAQD9/wMAAQAAAAAAAQD+/wIAAQAAAAAAAQD+/wEAAQAAAAAAAQD//wAAAQAAAAAAAQD/////AQAAAAAAAQAAAP7/AQAAAAAAAQAAAP3/AQAAAAAAAQABAPz/AQAAAAAAAQABAPv/AQAAAAAAAQAAAPv/AQAAAAAAAQD///v/AQAAAAAAAQD///r/AQAAAAAAAQD+//v/AQAAAAAAAQD9//v/AQAAAAAAAQD9//z/AQAAAAAAAQD8//3/AQAAAAAAAQD9//7/AQAAAAAAAQD9//3/AQAAAAAAAQD+//z/AQAAAAAAAQD+//3/AQAAAAAAAQD///z/AQAAAAAAAQD///3/AQAAAAAAAQAAAPz/AQAAAAAAAQD///7/AQAAAAAAAQD+//7/AQAAAAAAAQD9////AQAAAAAAAQD8////AQAAAAAAAQD9/wAAAQAAAAAAAQD9/wEAAQAAAAAAAQD+/wAAAQAAAAAAAQD+////AQAAAAAAAQACAPz/AQAAAAAAAQACAPv/AQAAAAAAAQABAP3/AQAAAAAAAQABAP7/AQAAAAAAAQAAAP//AQAAAAAAAQD//wEAAQAAAAAAAQD//wIAAQAAAAAAAQD+/wMAAQAAAAAAAQD+/wQAAQAAAAAAAQD9/wUAAQAAAAAAAQD+/wUAAQAAAAAAAQD//wQAAQAAAAAAAQD//wMAAQAAAAAAAQAAAAQAAQAAAAAAAQAAAAMAAQAAAAAAAQABAAIAAQAAAAAAAQABAAEAAQAAAAAAAQACAAAAAQAAAAAAAQACAP//AQAAAAAAAQADAP7/AQAAAAAAAQADAP3/AQAAAAAAAQAEAPz/AQAAAAAAAQAEAPv/AQAAAAAAAQAEAP3/AQAAAAAAAQAEAP7/AQAAAAAAAQADAP//AQAAAAAAAQADAAAAAQAAAAAAAQACAAEAAQAAAAAAAQACAAIAAQAAAAAAAQABAAMAAQAAAAAAAQABAAQAAQAAAAAAAQABAAUAAQAAAAAAAQACAAQAAQAAAAAAAQACAAMAAQAAAAAAAQADAAIAAQAAAAAAAQADAAEAAQAAAAAAAQAEAAAAAQAAAAAAAQAEAP//AQAAAAAAAQAFAP7/AQAAAAAAAQAFAP//AQAAAAAAAQAFAAAAAQAAAAAAAQAEAAEAAQAAAAAAAQAEAAIAAQAAAAAAAQADAAMAAQAAAAAAAQADAAQAAQAAAAAAAQACAAUAAQAAAAAAAQACAAYAAQAAAAAAAQADAAYAAQAAAAAAAQADAAUAAQAAAAAAAQAEAAQAAQAAAAAAAQAEAAMAAQAAAAAAAQAFAAIAAQAAAAAAAQAFAAEAAQAAAAAAAQAGAAAAAQAAAAAAAQAGAAIAAQAAAAAAAQAFAAMAAQAAAAAAAQAFAAQAAQAAAAAAAQAEAAUAAQAAAAAAAQAEAAYAAQAAAAAAAQD//wUAAQAAAAAAAQA=")
 tile_set = ExtResource("2_2pem3")
-script = ExtResource("1_3viof")
+script = ExtResource("3_8d2kc")
 pathfinding_enabled = true
 debug_mode = 1
 metadata/_custom_type_script = "uid://buj6ft1vvdf2f"
@@ -29,13 +41,13 @@ unique_name_in_owner = true
 visible = false
 tile_map_data = PackedByteArray("AAD3//r/AQAAAAAAAgD3//v/AQAAAAAAAgD3//z/AQAAAAAAAgD3//3/AQAAAAAAAgD3//7/AQAAAAAAAgD3////AQAAAAAAAgD3/wAAAQAAAAAAAgD3/wEAAQAAAAAAAgD3/wIAAQAAAAAAAgD3/wMAAQAAAAAAAgD3/wQAAQAAAAAAAgD4//r/AQAAAAAAAgD4//v/AQAAAAAAAgD4//z/AQAAAAAAAQD4//3/AQAAAAAAAQD4//7/AQAAAAAAAQD4////AQAAAAAAAQD4/wAAAQAAAAAAAQD4/wEAAQAAAAAAAQD4/wIAAQAAAAAAAgD4/wMAAQAAAAAAAgD4/wQAAQAAAAAAAgD5//r/AQAAAAAAAgD5//v/AQAAAAAAAQD5//z/AQAAAAAAAQD5//3/AQAAAAAAAQD5//7/AQAAAAAABQD5////AQAAAAAAAQD5/wAAAQAAAAAAAQD5/wEAAQAAAAAAAQD5/wIAAQAAAAAAAQD5/wMAAQAAAAAAAgD5/wQAAQAAAAAAAgD6//r/AQAAAAAAAgD6//v/AQAAAAAAAgD6//z/AQAAAAAAAQD6//3/AQAAAAAABQD6//7/AQAAAAAABQD6////AQAAAAAABQD6/wAAAQAAAAAABQD6/wEAAQAAAAAAAQD6/wIAAQAAAAAAAQD6/wMAAQAAAAAAAQD6/wQAAQAAAAAAAQD7//r/AQAAAAAAAgD7//v/AQAAAAAAAQD7//z/AQAAAAAABQD7//3/AQAAAAAABQD7//7/AQAAAAAABQD7////AQAAAAAABQD7/wAAAQAAAAAABQD7/wEAAQAAAAAABQD7/wIAAQAAAAAABQD7/wMAAQAAAAAAAQD7/wQAAQAAAAAAAQD8//r/AQAAAAAAAgD8//v/AQAAAAAAAQD8//z/AQAAAAAAAQD8//3/AQAAAAAAAQD8//7/AQAAAAAABQD8////AQAAAAAAAQD8/wAAAQAAAAAAAQD8/wEAAQAAAAAABQD8/wIAAQAAAAAABQD8/wMAAQAAAAAABQD8/wQAAQAAAAAAAQD9//r/AQAAAAAAAQD9//v/AQAAAAAAAQD9//z/AQAAAAAAAQD9//3/AQAAAAAAAQD9//7/AQAAAAAAAQD9////AQAAAAAAAQD9/wAAAQAAAAAAAQD9/wEAAQAAAAAAAQD9/wIAAQAAAAAAAQD9/wMAAQAAAAAAAQD9/wQAAQAAAAAAAQD+//r/AQAAAAAAAQD+//v/AQAAAAAAAQD+//z/AQAAAAAAAQD+//3/AQAAAAAAAQD+//7/AQAAAAAAAQD+////AQAAAAAAAQD+/wAAAQAAAAAAAQD+/wEAAQAAAAAAAQD+/wIAAQAAAAAAAQD+/wMAAQAAAAAAAQD+/wQAAQAAAAAAAQD///r/AQAAAAAAAQD///v/AQAAAAAAAQD///z/AQAAAAAAAQD///3/AQAAAAAAAQD///7/AQAAAAAAAQD/////AQAAAAAAAQD//wAAAQAAAAAAAQD//wEAAQAAAAAAAQD//wIAAQAAAAAAAQD//wMAAQAAAAAAAQD//wQAAQAAAAAAAQAAAPr/AQAAAAAAAQAAAPv/AQAAAAAAAQAAAPz/AQAAAAAAAQAAAP3/AQAAAAAAAQAAAP7/AQAAAAAAAQAAAP//AQAAAAAAAQAAAAAAAQAAAAAAAAAAAAEAAQAAAAAAAQAAAAIAAQAAAAAAAQAAAAMAAQAAAAAAAQAAAAQAAQAAAAAAAQABAPr/AQAAAAAAAQABAPv/AQAAAAAAAQABAPz/AQAAAAAAAQABAP3/AQAAAAAAAQABAP7/AQAAAAAAAQABAP//AQAAAAAAAQABAAAAAQAAAAAAAQABAAEAAQAAAAAAAQABAAIAAQAAAAAAAQABAAMAAQAAAAAAAQABAAQAAQAAAAAAAQACAPr/AQAAAAAAAgACAPv/AQAAAAAAAQACAPz/AQAAAAAAAQACAP3/AQAAAAAAAQACAP7/AQAAAAAAAQACAP//AQAAAAAAAQACAAAAAQAAAAAAAQACAAEAAQAAAAAAAQACAAIAAQAAAAAAAQACAAMAAQAAAAAAAQACAAQAAQAAAAAAAQADAPr/AQAAAAAAAQADAPv/AQAAAAAAAQADAPz/AQAAAAAAAQADAP3/AQAAAAAAAQADAP7/AQAAAAAAAQADAP//AQAAAAAAAQADAAAAAQAAAAAAAQADAAEAAQAAAAAAAQADAAIAAQAAAAAAAQADAAMAAQAAAAAAAQADAAQAAQAAAAAAAQAEAPr/AQAAAAAAAgAEAPv/AQAAAAAAAQAEAPz/AQAAAAAAAQAEAP3/AQAAAAAAAQAEAP7/AQAAAAAAAQAEAP//AQAAAAAAAQAEAAAAAQAAAAAAAQAEAAEAAQAAAAAAAQAEAAIAAQAAAAAAAQAEAAMAAQAAAAAAAQAEAAQAAQAAAAAAAQAFAPr/AQAAAAAAAgAFAPv/AQAAAAAAAQAFAPz/AQAAAAAAAQAFAP3/AQAAAAAAAQAFAP7/AQAAAAAAAQAFAP//AQAAAAAAAQAFAAAAAQAAAAAAAQAFAAEAAQAAAAAAAQAFAAIAAQAAAAAAAQAFAAMAAQAAAAAAAQAFAAQAAQAAAAAAAQAGAPr/AQAAAAAAAgAGAPv/AQAAAAAAAgAGAPz/AQAAAAAAAgAGAP3/AQAAAAAAAgAGAP7/AQAAAAAAAQAGAP//AQAAAAAAAQAGAAAAAQAAAAAAAQAGAAEAAQAAAAAAAQAGAAIAAQAAAAAAAQAGAAMAAQAAAAAAAQAGAAQAAQAAAAAAAQAHAPr/AQAAAAAAAgAHAPv/AQAAAAAAAgAHAPz/AQAAAAAAAgAHAP3/AQAAAAAAAgAHAP7/AQAAAAAAAgAHAP//AQAAAAAAAgAHAAAAAQAAAAAAAQAHAAEAAQAAAAAAAQAHAAIAAQAAAAAAAQAHAAMAAQAAAAAAAgAHAAQAAQAAAAAAAgAIAPr/AQAAAAAAAgAIAPv/AQAAAAAAAgAIAPz/AQAAAAAAAgAIAP3/AQAAAAAAAgAIAP7/AQAAAAAAAgAIAP//AQAAAAAAAgAIAAAAAQAAAAAAAgAIAAEAAQAAAAAAAgAIAAIAAQAAAAAAAgAIAAMAAQAAAAAAAgAIAAQAAQAAAAAAAgD3/wUAAQAAAAAAAgD4/wUAAQAAAAAAAgD5/wUAAQAAAAAAAgD6/wUAAQAAAAAAAgD7/wUAAQAAAAAAAgD8/wUAAQAAAAAAAgD9/wUAAQAAAAAAAgD+/wUAAQAAAAAAAQD//wUAAQAAAAAAAgAAAAUAAQAAAAAAAgABAAUAAQAAAAAAAgACAAUAAQAAAAAAAQADAAUAAQAAAAAAAQAEAAUAAQAAAAAAAQAFAAUAAQAAAAAAAgAGAAUAAQAAAAAAAgAHAAUAAQAAAAAAAgAIAAUAAQAAAAAAAgD2//r/AQAAAAAAAgD2//v/AQAAAAAAAgD2//z/AQAAAAAAAgD2//3/AQAAAAAAAgD2//7/AQAAAAAAAgD2////AQAAAAAAAgD2/wAAAQAAAAAAAgD2/wEAAQAAAAAAAgD2/wIAAQAAAAAAAgD2/wMAAQAAAAAAAgD2/wQAAQAAAAAAAgD2/wUAAQAAAAAAAgA=")
 tile_set = ExtResource("2_i68m5")
-script = ExtResource("1_3viof")
+script = ExtResource("3_8d2kc")
 pathfinding_enabled = true
 debug_mode = 1
 metadata/_custom_type_script = "uid://buj6ft1vvdf2f"
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
+zoom = Vector2(0.6, 0.6)
 script = ExtResource("4_2pem3")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -54,42 +66,54 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="LeftMenu" type="VBoxContainer" parent="CanvasLayer/MarginContainer"]
+custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 0
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
 script = ExtResource("6_tv2ty")
 
 [node name="TileLayout" type="PanelContainer" parent="CanvasLayer/MarginContainer/LeftMenu"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center]Tile Layout[/center]"
 fit_content = true
 scroll_active = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="LayoutHorizontal" type="CheckBox" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer"]
+layout_mode = 2
+
+[node name="LayoutHorizontal" type="CheckBox" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 button_group = SubResource("ButtonGroup_2pem3")
 text = "Horizontal"
 
-[node name="LayoutVertical" type="CheckBox" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer/HBoxContainer"]
+[node name="LayoutVertical" type="CheckBox" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 button_group = SubResource("ButtonGroup_2pem3")
 text = "Vertical"
 
-[node name="TileSetLayout" type="OptionButton" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer"]
+[node name="TileSetLayout" type="OptionButton" parent="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -111,48 +135,75 @@ popup/item_5/id = 5
 [node name="Options" type="PanelContainer" parent="CanvasLayer/MarginContainer/LeftMenu"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/LeftMenu/Options"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/LeftMenu/Options"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center]Options[/center]"
 fit_content = true
 scroll_active = false
 
-[node name="EnablePathfinding" type="CheckButton" parent="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer"]
+[node name="EnablePathfinding" type="CheckButton" parent="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Enable Pathfinding"
 
-[node name="DisplayPathfindingConnections" type="CheckButton" parent="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer"]
+[node name="DisplayPathfindingConnections" type="CheckButton" parent="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Display Connections"
 
-[node name="DisplayTilesCoords" type="CheckButton" parent="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer"]
+[node name="DisplayTilesCoords" type="CheckButton" parent="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Display Tiles Coords"
 
-[node name="RightMenu" type="VBoxContainer" parent="CanvasLayer/MarginContainer"]
+[node name="MethodsTree" type="Tree" parent="CanvasLayer/MarginContainer/LeftMenu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+focus_mode = 0
+script = ExtResource("7_3xb6e")
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer"]
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
+mouse_force_pass_scroll_events = false
+theme_override_styles/panel = SubResource("StyleBoxFlat_3xb6e")
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer/RightMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/PanelContainer"]
 layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="Tree" type="Tree" parent="CanvasLayer/MarginContainer/RightMenu/PanelContainer"]
+[node name="SampleCode" type="RichTextLabel" parent="CanvasLayer/MarginContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+bbcode_enabled = true
+text = "Sample Code + Result"
 
-[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer/HBoxContainer/LayoutHorizontal" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_offset_horizontal_pressed"]
-[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer/HBoxContainer/LayoutVertical" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_offset_vertical_pressed"]
-[connection signal="item_selected" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/VBoxContainer/TileSetLayout" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_selected"]
-[connection signal="toggled" from="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer/EnablePathfinding" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_enable_pathfinding_toggled"]
-[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer/DisplayPathfindingConnections" to="CanvasLayer/MarginContainer/LeftMenu" method="update_debug_mode"]
-[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/Options/VBoxContainer/DisplayTilesCoords" to="CanvasLayer/MarginContainer/LeftMenu" method="update_debug_mode"]
+[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/LayoutHorizontal" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_offset_horizontal_pressed"]
+[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/LayoutVertical" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_offset_vertical_pressed"]
+[connection signal="item_selected" from="CanvasLayer/MarginContainer/LeftMenu/TileLayout/MarginContainer/VBoxContainer/TileSetLayout" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_tile_layout_selected"]
+[connection signal="toggled" from="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer/EnablePathfinding" to="CanvasLayer/MarginContainer/LeftMenu" method="_on_enable_pathfinding_toggled"]
+[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer/DisplayPathfindingConnections" to="CanvasLayer/MarginContainer/LeftMenu" method="update_debug_mode"]
+[connection signal="pressed" from="CanvasLayer/MarginContainer/LeftMenu/Options/MarginContainer/VBoxContainer/DisplayTilesCoords" to="CanvasLayer/MarginContainer/LeftMenu" method="update_debug_mode"]
+[connection signal="item_selected" from="CanvasLayer/MarginContainer/LeftMenu/MethodsTree" to="CanvasLayer/MarginContainer/LeftMenu/MethodsTree" method="_on_item_selected"]
