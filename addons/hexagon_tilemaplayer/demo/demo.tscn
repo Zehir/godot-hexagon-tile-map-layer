@@ -206,7 +206,6 @@ size_flags_vertical = 3
 focus_mode = 2
 bbcode_enabled = true
 text = "Sample Code + Result"
-autowrap_mode = 1
 context_menu_enabled = true
 selection_enabled = true
 

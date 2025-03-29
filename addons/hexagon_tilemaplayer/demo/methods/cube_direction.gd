@@ -6,25 +6,24 @@ var line: Line2D
 var tween: Tween
 var current_index: int = 0
 var neighbors: Array = []
-var base_text: String = ""
 
 enum CellNeighbor {
-	CELL_NEIGHBOR_RIGHT_SIDE = 0,
-	CELL_NEIGHBOR_RIGHT_CORNER = 1,
-	CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE = 2,
-	CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER = 3,
-	CELL_NEIGHBOR_BOTTOM_SIDE = 4,
-	CELL_NEIGHBOR_BOTTOM_CORNER = 5,
-	CELL_NEIGHBOR_BOTTOM_LEFT_SIDE = 6,
-	CELL_NEIGHBOR_BOTTOM_LEFT_CORNER = 7,
-	CELL_NEIGHBOR_LEFT_SIDE = 8,
-	CELL_NEIGHBOR_LEFT_CORNER = 9,
-	CELL_NEIGHBOR_TOP_LEFT_SIDE = 10,
-	CELL_NEIGHBOR_TOP_LEFT_CORNER = 11,
-	CELL_NEIGHBOR_TOP_SIDE = 12,
-	CELL_NEIGHBOR_TOP_CORNER = 13,
-	CELL_NEIGHBOR_TOP_RIGHT_SIDE = 14,
-	CELL_NEIGHBOR_TOP_RIGHT_CORNER = 15,
+	RIGHT_SIDE = 0,
+	RIGHT_CORNER = 1,
+	BOTTOM_RIGHT_SIDE = 2,
+	BOTTOM_RIGHT_CORNER = 3,
+	BOTTOM_SIDE = 4,
+	BOTTOM_CORNER = 5,
+	BOTTOM_LEFT_SIDE = 6,
+	BOTTOM_LEFT_CORNER = 7,
+	LEFT_SIDE = 8,
+	LEFT_CORNER = 9,
+	TOP_LEFT_SIDE = 10,
+	TOP_LEFT_CORNER = 11,
+	TOP_SIDE = 12,
+	TOP_CORNER = 13,
+	TOP_RIGHT_SIDE = 14,
+	TOP_RIGHT_CORNER = 15,
 }
 
 
@@ -60,22 +59,6 @@ func _ready() -> void:
 
 	demo.camera_2d.focus_tile(center_tile)
 
-	for neighbor_index in neighbors.size():
-		var tile = demo.tile_map.get_or_make_debug_tile(
-			neighbor_index, remap(neighbor_index, 0, 11, 0.0, 1.0)
-		)
-		tile.position = demo.tile_map.cube_to_local(
-			demo.tile_map.cube_direction(neighbors[neighbor_index][0])
-		)
-
-		var key: String = CellNeighbor.find_key(neighbors[neighbor_index][0])
-		base_text += (
-			"[color=%s]# %s[/color]\n"
-			% [tile.self_modulate.to_html(), key.replace("CELL_NEIGHBOR_", "")]
-		)
-		if neighbor_index == 5:
-			base_text += "\n"
-
 
 func update_tile() -> void:
 	current_index = (current_index + 1) % 12
@@ -87,9 +70,29 @@ func update_tile() -> void:
 	label.append_text("[color=C45C6D]var[/color] ")
 	label.append_text("[color=%s]cell[/color] = " % Color.GREEN.to_html())
 	label.append_text("[color=57B2FF]cube_direction[/color](\n")
-	label.append_text("\t[color=8CF9D6]TileSet[/color].[color=BCE0FF]%s[/color]\n" % neighbor[1])
+	label.append_text(
+		"\t[color=8CF9D6]TileSet[/color].[color=BCE0FF]CELL_NEIGHBOR_\n\t%s[/color]\n" % neighbor[1]
+	)
 	label.append_text(")\n\n")
-	label.append_text(base_text)
+
+	for neighbor_index in neighbors.size():
+		var tile = demo.tile_map.get_or_make_debug_tile(
+			neighbor_index, remap(neighbor_index, 0, 11, 0.0, 1.0)
+		)
+		tile.position = demo.tile_map.cube_to_local(
+			demo.tile_map.cube_direction(neighbors[neighbor_index][0])
+		)
+
+		var key: String = CellNeighbor.find_key(neighbors[neighbor_index][0])
+		label.push_color(tile.self_modulate)
+		label.append_text("# %s" % key)
+		label.pop()
+		if neighbor_index == current_index:
+			label.append_text(" <--")
+		label.newline()
+
+		if neighbor_index == 5:
+			label.append_text("\n")
 
 	var position = demo.tile_map.cube_direction(neighbor[0])
 	var tile = demo.tile_map.get_or_make_debug_tile_with_color(12, Color.GREEN)
