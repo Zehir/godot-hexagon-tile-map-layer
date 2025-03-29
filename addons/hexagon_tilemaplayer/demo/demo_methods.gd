@@ -7,7 +7,10 @@ const CubeLinedraw = preload("uid://sh0b67wxk8us")
 @onready var demo: DemoManager = %DemoManager
 var current_method: Node
 
-const methods: Dictionary[String, GDScript] = {"cube_linedraw": preload("uid://sh0b67wxk8us")}
+const methods: Dictionary[String, GDScript] = {
+	"cube_linedraw": preload("uid://sh0b67wxk8us"),
+	"cube_direction": preload("uid://cwjv67kxuu1li"),
+}
 
 
 func _ready() -> void:
@@ -20,7 +23,9 @@ func _ready() -> void:
 		child.set_text(0, method_name)
 		child.set_metadata(0, methods[method_name])
 
-	root.get_first_child().select(0)
+	var childs = root.get_children()
+
+	childs.pop_back().select(0)
 
 
 func _on_item_selected() -> void:

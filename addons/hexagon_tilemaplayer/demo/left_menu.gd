@@ -14,6 +14,7 @@ const DemoManager = preload("uid://c5t8k8u70hsgr")
 @onready var button_enable_pathfinding: CheckButton = %EnablePathfinding
 @onready var button_display_pathfinding_connections: CheckButton = %DisplayPathfindingConnections
 @onready var button_display_tiles_coords: CheckButton = %DisplayTilesCoords
+@onready var methods_tree: Tree = %MethodsTree
 
 
 func _ready() -> void:
@@ -45,11 +46,14 @@ func _on_tile_layout_offset_horizontal_pressed() -> void:
 func switch_to_tilemap(new_tile_map: HexagonTileMapLayer):
 	demo.tile_map.visible = false
 	var old_layout = demo.tile_map.tile_set.tile_layout
+	var old_method = methods_tree.get_selected()
+	methods_tree.deselect_all()
 	demo.tile_map = new_tile_map
 	demo.tile_map.visible = true
 	_on_enable_pathfinding_toggled(button_enable_pathfinding.button_pressed)
 	update_debug_mode()
 	_on_tile_layout_selected(old_layout)
+	methods_tree.set_selected(old_method, 0)
 
 
 func _on_tile_layout_selected(index: int) -> void:

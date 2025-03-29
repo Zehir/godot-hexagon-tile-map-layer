@@ -47,7 +47,10 @@ debug_mode = 1
 metadata/_custom_type_script = "uid://buj6ft1vvdf2f"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
 zoom = Vector2(0.6, 0.6)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
 script = ExtResource("4_2pem3")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -180,10 +183,8 @@ focus_mode = 0
 script = ExtResource("7_3xb6e")
 
 [node name="CodeContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer"]
-custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 8
-size_flags_vertical = 0
 mouse_force_pass_scroll_events = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_3xb6e")
 
@@ -194,12 +195,18 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="SampleCode" type="RichTextLabel" parent="CanvasLayer/MarginContainer/CodeContainer/MarginContainer"]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/CodeContainer/MarginContainer"]
 layout_mode = 2
+
+[node name="SampleCode" type="RichTextLabel" parent="CanvasLayer/MarginContainer/CodeContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+size_flags_vertical = 3
 focus_mode = 2
 bbcode_enabled = true
 text = "Sample Code + Result"
+autowrap_mode = 1
 context_menu_enabled = true
 selection_enabled = true
 
