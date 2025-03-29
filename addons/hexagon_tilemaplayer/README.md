@@ -6,15 +6,21 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/Zehir/godot-hexagon-tile-map-layer?style=for-the-badge&color=16A085)](https://github.com/Zehir/godot-hexagon-tile-map-layer/stargazers)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/Zehir?style=for-the-badge&color=16A085)](https://github.com/sponsors/Zehir)
 
+<!-- description_start -->
+
 Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube coordinates system.
 
 Require [Godot 4.4](https://godotengine.org/releases/4.4/)+, for [4.3](https://godotengine.org/releases/4.3/)+ use version [1.0.1](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases/tag/v1.0.1) or earlier
+
+<!-- description_end -->
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Zehir/godot-hexagon-tile-map-layer/main/images/cube_linedraw.png" />
 </p>
 
 ## Features
+
+<!-- description_start -->
 
 - A\* pathfinding support
 - Cube coordinates system
@@ -24,6 +30,8 @@ Require [Godot 4.4](https://godotengine.org/releases/4.4/)+, for [4.3](https://g
 - Toolbar actions to fix tilemaps after layout changes
 - Debug visualization
 - Embeded documentation
+
+<!-- description_end -->
 
 ## Quick Start
 

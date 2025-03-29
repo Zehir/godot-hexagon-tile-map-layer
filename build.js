@@ -79,21 +79,45 @@ const download_url = `${REPO_URL}/releases/download/v${packageJson.version}/${ad
 // Function to parse README and extract description
 function getDescriptionFromReadme() {
     const readmeContent = fs.readFileSync('README.md', 'utf8');
-    const lines = readmeContent.split('\n');
+    let description = '';
+    let searchStart = 0;
 
-    // Get first paragraph (excluding lines starting with #)
-    const firstParagraph = lines.find(line => line.trim() && !line.startsWith('#'));
+    // Find all text blocks between description markers
+    while (true) {
+        const descriptionStart = readmeContent.indexOf('<!-- description_start -->', searchStart);
+        if (descriptionStart === -1) break;
 
-    // Get features list (excluding the "Features" header)
-    const featureStart = lines.findIndex(line => line.includes('## Features'));
-    const featureEnd = lines.findIndex((line, idx) => idx > featureStart && line.startsWith('##'));
-    const features = lines
-        .slice(featureStart + 1, featureEnd)
-        .filter(line => line.trim() && line.startsWith('-'))
-        .map(line => line.trim())
-        .join('\n');
+        const contentStart = descriptionStart + '<!-- description_start -->'.length;
+        const descriptionEnd = readmeContent.indexOf('<!-- description_end -->', contentStart);
 
-    return `${firstParagraph}\n\nFeatures:\n${features}`;
+        if (descriptionEnd === -1) break;
+
+        // Extract the text between the markers
+        let blockText = readmeContent.substring(contentStart, descriptionEnd).trim();
+
+        blockText = blockText.replaceAll("A\\*", 'A*');
+
+        // Remove Markdown links - format [text](url) - keep only the text part
+        blockText = blockText.replaceAll(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+
+        // Remove HTML links - format <url>
+        blockText = blockText.replaceAll(/<https?:\/\/[^>]+>/g, '');
+
+        // Add this block to the combined description
+        if (description && blockText) {
+            description += '\n\n';
+        }
+        description += blockText;
+
+        // Move search position to continue looking for more blocks
+        searchStart = descriptionEnd + '<!-- description_end -->'.length;
+    }
+
+    // If we found description blocks, return them
+    if (description) {
+        return description;
+    }
+
 }
 
 const image_url = (name) => `${REPO_URL.replace('github.com', 'raw.githubusercontent.com')}/main/images/${name}.png`;
