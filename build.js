@@ -63,6 +63,7 @@ addFilesToZip(fullZip, ADDON_PATH, path.join(exampleArchiveName, ADDON_PATH), ex
 fullZip.writeZip(path.join(DIST_PATH, `${exampleArchiveName}.zip`));
 
 excludePatterns.push('example');
+excludePatterns.push('demo');
 
 // Create addon archive
 const addonZip = new AdmZip();
