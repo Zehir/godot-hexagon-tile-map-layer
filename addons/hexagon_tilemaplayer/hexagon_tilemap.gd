@@ -529,7 +529,7 @@ static func cube_linedraw(a: Vector3i, b: Vector3i) -> Array[Vector3i]:
 	var ac = Vector3(a)
 	var bc = Vector3(b)
 	for index in range(0, distance):
-		results.append(Vector3i(lerp(ac, bc, 1.0 / distance * index).round()))
+		results.append(cube_round(lerp(ac, bc, 1.0 / distance * index)))
 	# Sometime the edges are missings
 	if results[0] != a:
 		results.push_front(a)
