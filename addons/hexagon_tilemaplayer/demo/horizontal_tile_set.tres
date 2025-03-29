@@ -26,7 +26,7 @@ texture_region_size = Vector2i(164, 190)
 0:0/5/custom_data_1 = 1.0
 
 [resource]
-resource_name = "Stacked Horizontal"
+resource_name = "Horizontal"
 tile_shape = 3
 tile_size = Vector2i(164, 190)
 custom_data_layer_0/name = "is_ocean"
