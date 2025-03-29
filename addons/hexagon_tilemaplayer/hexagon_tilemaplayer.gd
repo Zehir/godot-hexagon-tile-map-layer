@@ -1347,3 +1347,45 @@ func cube_outlines(cells: Array[Vector3i]) -> Array[Array]:
 			outlines.append(current_outline)
 
 	return outlines
+
+
+## Updates the layout of a hex tilemap while preserving the logical positions of all tiles.
+##
+## [br]When changing a tilemap's layout (e.g., from stacked to diamond), this function ensures
+## all tiles maintain their relative positions by converting them through the cube coordinate system.
+## [br][color=yellow][b]Note:[/b][/color] This function only updates the positions of existing tiles. It does not modify
+## the tileset's properties like cell size, offset, or other configuration parameters. You'll need to
+## adjust those manually if needed.
+## [br][b]Parameters:[/b]
+## [br]- [param from]: The current/source TileSet.TileLayout
+## [br]- [param to]: The desired/target TileSet.TileLayout
+## [codeblock]
+## # Convert a map from stacked to diamond layout
+## my_tilemap.update_cells_layout(
+##     TileSet.TileLayout.TILE_LAYOUT_STACKED,
+##     TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT
+## )
+## [/codeblock]
+## [codeblock]
+## # Add a layout switcher to your game
+## func _on_layout_button_pressed():
+##     var current_layout = tilemap.tile_set.tile_layout
+##     var new_layout
+##
+##     match current_layout:
+##         TileSet.TileLayout.TILE_LAYOUT_STACKED:
+##             new_layout = TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT
+##         TileSet.TileLayout.TILE_LAYOUT_DIAMOND_RIGHT:
+##             new_layout = TileSet.TileLayout.TILE_LAYOUT_STAIRS_RIGHT
+##         _:
+##             new_layout = TileSet.TileLayout.TILE_LAYOUT_STACKED
+##
+##     tilemap.update_cells_layout(current_layout, new_layout)
+##
+##     # Update the tilemap with the new layout
+##     tilemap.tile_set.tile_layout = new_layout
+##     tilemap.pathfinding_generate_points()
+##     tilemap._draw_debug.call_deferred()
+## [/codeblock]
+func update_cells_layout(from: TileSet.TileLayout, to: TileSet.TileLayout):
+	HexagonTileMap.update_cells_layout(self, from, to)
