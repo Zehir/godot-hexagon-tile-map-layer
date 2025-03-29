@@ -1,4 +1,5 @@
 # Godot Hexagon TileMapLayer
+
 [![Godot minimum version](https://img.shields.io/badge/Godot-v4.4%2B-%232C3E50?logo=godotengine&logoColor=6584C4&style=for-the-badge)](https://godotengine.org/releases/4.4/)
 [![GitHub Release](https://img.shields.io/github/v/release/Zehir/godot-hexagon-tile-map-layer?sort=semver&display_name=release&style=for-the-badge&color=2980B9)](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases/latest)
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Zehir/godot-hexagon-tile-map-layer/total?style=for-the-badge&color=2980B9)](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases)
@@ -19,6 +20,10 @@ Require [Godot 4.4](https://godotengine.org/releases/4.4/)+, for [4.3](https://g
 - Toolbar actions to fix tilemaps after layout changes
 - Debug visualization
 - Embeded documentation
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Zehir/godot-hexagon-tile-map-layer/main/images/cube_linedraw.png" />
+</p>
 
 ## Quick Start
 
