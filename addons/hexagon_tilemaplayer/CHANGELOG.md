@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.1
+
+### Patch Changes
+
+- ef3cc9f: Removed demo folder from main build.
+
 ## 2.3.0
 
 ### Minor Changes
