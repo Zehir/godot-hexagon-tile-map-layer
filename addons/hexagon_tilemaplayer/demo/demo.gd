@@ -22,26 +22,23 @@ func _ready() -> void:
 
 func _on_tile_layout_offset_vertical_pressed() -> void:
 	hexagon_tile_map_layer.tile_set = STACKED_VERTICAL
+	hexagon_tile_map_layer.astar_changed.connect(
+		_on_tile_layout_selected.bind(tile_set_layout_option.selected), CONNECT_ONE_SHOT
+	)
 	hexagon_tile_map_layer.pathfinding_generate_points()
-	await hexagon_tile_map_layer.astar_changed
-	_on_tile_layout_selected(tile_set_layout_option.selected)
 
 
 func _on_tile_layout_offset_horizontal_pressed() -> void:
 	hexagon_tile_map_layer.tile_set = STACKED_HORIZONTAL
+	hexagon_tile_map_layer.astar_changed.connect(
+		_on_tile_layout_selected.bind(tile_set_layout_option.selected), CONNECT_ONE_SHOT
+	)
 	hexagon_tile_map_layer.pathfinding_generate_points()
-	await hexagon_tile_map_layer.astar_changed
-	_on_tile_layout_selected(tile_set_layout_option.selected)
 
 
 func _on_tile_layout_selected(index: int) -> void:
-	if hexagon_tile_map_layer.tile_set.tile_layout == index:
-		return
-
-	HexagonTileMap.update_cells_layout(
-		hexagon_tile_map_layer,
-		hexagon_tile_map_layer.tile_set.tile_layout,
-		index as TileSet.TileLayout
+	hexagon_tile_map_layer.update_cells_layout(
+		hexagon_tile_map_layer.tile_set.tile_layout, index as TileSet.TileLayout
 	)
 
 	if hexagon_tile_map_layer.pathfinding_enabled:
