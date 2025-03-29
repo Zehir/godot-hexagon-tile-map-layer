@@ -2,4 +2,5 @@
 "hexagon-tile-map-layer": minor
 ---
 
-Added interactive demo for the plugin showcasing hex grid functionality with layout selection
+Added interactive demo for the plugin showcasing hex grid functionality with layout selection.
+More methods will be added to the demo in the future.
