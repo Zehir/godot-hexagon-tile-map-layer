@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.3.0
+
+### Minor Changes
+
+- e9cff51: Added interactive demo for the plugin showcasing hex grid functionality with layout selection.
+  More methods will be added to the demo in the future.
+- 9777a32: Added `update_cells_layout` method to updates the layout of a hex tilemap while preserving the logical positions of all tiles.
+- 69ff05f: Added method `HexagonTileMap.update_cells_layout` to updates the layout of a hex tilemap while preserving the logical positions of all tiles.
+- 60ab58b: Added methods `HexagonTileMap.cube_round` and `cube_round` to rounds a fractional cube coordinate to the nearest valid hex coordinate.
+
+### Patch Changes
+
+- b061de5: Fixed conversion methods reloading when the tile_set itself is replaced during runtime.
+- dedab9e: Fixed `cube_linedraw` method that could skip some tiles on the line depending on the selected tile_layout when the line is aligned to some of the corner axes.
+
 ## 2.2.0
 
 ### Minor Changes

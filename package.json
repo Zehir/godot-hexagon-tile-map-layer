@@ -1,6 +1,6 @@
 {
   "name": "hexagon-tile-map-layer",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "godotVersion": "4.4",
   "category": "2D Tools",
   "displayName": "Hexagon TileMapLayer",
