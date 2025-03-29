@@ -10,6 +10,10 @@ Set of tools to use hexagon based tilemap in Godot with A\* pathfinding and cube
 
 Require [Godot 4.4](https://godotengine.org/releases/4.4/)+, for [4.3](https://godotengine.org/releases/4.3/)+ use version [1.0.1](https://github.com/Zehir/godot-hexagon-tile-map-layer/releases/tag/v1.0.1) or earlier
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Zehir/godot-hexagon-tile-map-layer/main/images/cube_linedraw.png" />
+</p>
+
 ## Features
 
 - A\* pathfinding support
@@ -20,10 +24,6 @@ Require [Godot 4.4](https://godotengine.org/releases/4.4/)+, for [4.3](https://g
 - Toolbar actions to fix tilemaps after layout changes
 - Debug visualization
 - Embeded documentation
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Zehir/godot-hexagon-tile-map-layer/main/images/cube_linedraw.png" />
-</p>
 
 ## Quick Start
 
