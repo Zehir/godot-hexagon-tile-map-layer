@@ -547,6 +547,9 @@ static func cube_linedraw(a: Vector3i, b: Vector3i) -> Array[Vector3i]:
 ## [br]See [HexagonTileMapLayer.cube_range] for details.
 static func cube_range(center: Vector3i, distance: int) -> Array[Vector3i]:
 	var results: Array[Vector3i] = []
+	if distance == 0:
+		results.append(center)
+		return results
 	for q in range(-distance, distance + 1):
 		for r in range(max(-distance, -q - distance), min(distance, -q + distance) + 1):
 			var s = -q - r
