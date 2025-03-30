@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.4.0
+
+### Minor Changes
+
+- 2db5f3d: Added `cube_range` and `cube_intersect_ranges` demo. Refactored some parts of the demos.
+- c5644a9: Added `cube_rect`, `cube_rect_corner_neighbors`, `cube_ring` demo.
+- 6b4f4a1: Updated `cube_linedraw` demo.
+- 50344a8: Added `cube_neighbors`, `cube_corner_neighbors`, `cube_distance` demo.
+- cf10679: Added `cube_neighbor` demo.
+- 153735d: Added `cube_spiral` demo and rework method list.
+- 6b4f4a1: Added `cube_direction` demo.
+- 10ef17a: Added `cube_rotate`, `cube_rotate_from`, `cube_reflect`, `cube_reflect_from` demo.
+
+### Patch Changes
+
+- bdccc2b: Fixed `cube_ring` returning empty array with size of 0.
+- 3b88ded: Fixed `cube_range` to return the center cell with a distance of 0.
+- e6cef6e: Fixed `cube_linedraw` not returning a cell when both points are the same.
+
 ## 2.3.1
 
 ### Patch Changes
