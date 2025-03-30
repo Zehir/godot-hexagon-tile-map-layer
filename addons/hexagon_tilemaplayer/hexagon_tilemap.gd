@@ -733,6 +733,7 @@ static func _cube_ring_for_neighbor(
 		push_error("Invalid first_side value provided '%s'" % first_index)
 		return result
 	if radius < 1:
+		result.append(center)
 		return result
 
 	var hex = center + direction_vectors[first_side] * radius
