@@ -28,20 +28,8 @@ func _exit_tree() -> void:
 
 
 func _ready() -> void:
-	(
-		demo
-		. camera_2d
-		. focus_tile(
-			demo.tile_map.cube_to_local(Vector3i.ZERO),
-			DemoCamera.FocusSide.BOTTOM_LEFT,
-		)
-	)
-
-	if demo.tile_map.tile_set.tile_offset_axis == TileSet.TILE_OFFSET_AXIS_HORIZONTAL:
-		demo.tile_map.hovering_tile = Vector3i(6, -3, -3)
-	else:
-		demo.tile_map.hovering_tile = Vector3i(5, -6, 1)
-
+	demo.camera_2d.focus_tile(demo.tile_map.cube_to_local(Vector3i.ZERO))
+	demo.tile_map.hovering_tile = Vector3i(2, -2, 0)
 	_on_tile_changed.call()
 
 
@@ -49,27 +37,36 @@ func _on_tile_changed() -> void:
 	if demo.tile_map.hovering_tile == null:
 		return
 
+	var distance = demo.tile_map.cube_distance(Vector3i.ZERO, demo.tile_map.hovering_tile)
+	var cells = demo.tile_map.cube_range(Vector3i.ZERO, distance)
+
 	var label = demo.sample_code
 	label.clear()
 	line.clear_points()
 
 	label.push_color(Color.from_string("CBCDD0", Color.WHITE))
-	label.append_text("[color=C45C6D]var[/color] distance = [color=57B2FF]cube_distance[/color](\n")
+	label.append_text("[color=C45C6D]var[/color] cells = [color=57B2FF]cube_range[/color](\n")
 	label.push_color(demo.tile_map.PRIMARY_COLOR)
 	label.append_text("\tVector3i.ZERO")
 	label.pop()
 	label.append_text(",\n")
 	label.push_color(demo.tile_map.SECONDARY_COLOR)
-	label.append_text("\t%s\n" % var_to_str(demo.tile_map.hovering_tile))
+	label.append_text("\t%s\n" % distance)
 	label.pop()
 	label.append_text(")\n\n")
+	label.append_text("[color=57B2FF]print[/color](cells.[color=57B2FF]size[/color]())")
+	label.append_text("[color=gray] # %s[/color]\n" % cells.size())
+	label.append_text("[color=57B2FF]print[/color](cells)\n")
 
-	var distance = demo.tile_map.cube_distance(Vector3i.ZERO, demo.tile_map.hovering_tile)
-
-	label.append_text("[color=57B2FF]print[/color](distance) # %s" % distance)
-
-	line.add_point(demo.tile_map.cube_to_local(Vector3i.ZERO))
-	line.add_point(demo.tile_map.cube_to_local(demo.tile_map.hovering_tile))
+	var tiles = demo.tile_map.show_range_with_gradient_color(cells)
+	var point_count = cells.size()
+	for index in point_count:
+		var tile = tiles[index]
+		line.add_point(tile.position)
+		label.push_color(tile.self_modulate)
+		label.append_text("# %s" % var_to_str(cells[index]))
+		label.newline()
+		label.pop()
 
 	label.pop_all()
-	demo.tile_map.show_debug_tiles(-1)
+	demo.tile_map.show_debug_tiles(point_count - 1)

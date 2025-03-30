@@ -14,20 +14,22 @@ const methods: Dictionary[String, GDScript] = {
 	"cube_direction": preload("uid://cwjv67kxuu1li"),
 	"cube_distance": preload("uid://croybbcw88our"),
 	"cube_linedraw": preload("uid://sh0b67wxk8us"),
+	"cube_range": preload("uid://b6cnoelqbw8uc"),
+	"cube_intersect_ranges": preload("uid://dkugmb7vsjusc"),
 }
 
 
 func _ready() -> void:
 	var root = create_item()
 	root.set_text(0, "Methods")
-	var default = "cube_distance"
+	var default = "cube_intersect_ranges"
 	#hide_root = true
 
 	for method_name in methods.keys():
 		var child = create_item(root)
 		child.set_text(0, method_name)
 		child.set_metadata(0, methods[method_name])
-		
+
 		if default is String and method_name == default:
 			default = child
 

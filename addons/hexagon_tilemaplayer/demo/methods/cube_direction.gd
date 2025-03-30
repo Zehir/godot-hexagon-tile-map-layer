@@ -14,6 +14,7 @@ func _init(_demo: DemoManager) -> void:
 	line = Line2D.new()
 	line.width = 10.0
 	line.default_color = Color.BLUE
+	line.z_index = 100
 	demo.tile_map.add_child(line)
 
 	for neighbor in demo.tile_map.cube_side_neighbor_directions:

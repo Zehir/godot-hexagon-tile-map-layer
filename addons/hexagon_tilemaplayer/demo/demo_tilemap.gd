@@ -13,13 +13,19 @@ var hovering_tile: Vector3i = Vector3i.ZERO
 signal hovering_changed
 
 
-func get_or_make_debug_tile(index: int, weight: float = 0.5) -> Sprite2D:
-	var color = PRIMARY_COLOR.lerp(SECONDARY_COLOR, weight)
+func get_or_make_debug_tile(
+	index: int,
+	weight: float = 0.5,
+	primary_color: Color = PRIMARY_COLOR,
+	secondary_color: Color = SECONDARY_COLOR,
+) -> Sprite2D:
+	var color = primary_color.lerp(secondary_color, weight)
 	return get_or_make_debug_tile_with_color(index, color)
 
 
 func get_or_make_debug_tile_with_color(
-	index: int, color: Color = Color(randf(), randf(), randf())
+	index: int,
+	color: Color = Color(randf(), randf(), randf()),
 ) -> Sprite2D:
 	if debug_hovering_tiles.has(index):
 		debug_hovering_tiles[index].self_modulate = color
@@ -35,6 +41,45 @@ func get_or_make_debug_tile_with_color(
 	debug_hovering_tiles[index] = sprite
 	add_child(sprite)
 	return sprite
+
+
+func show_range_with_gradient_color(
+	cells: Array[Vector3i],
+	start_id: int = 0,
+	primary_color: Color = PRIMARY_COLOR,
+	secondary_color: Color = SECONDARY_COLOR,
+) -> Array[Sprite2D]:
+	var point_count = cells.size()
+	var tiles: Array[Sprite2D] = []
+	for index in point_count:
+		var cell_position = cube_to_local(cells[index])
+
+		var color_offset: float
+		if point_count > 1:
+			color_offset = remap(index, 0, point_count - 1, 0.0, 1.0)
+		else:
+			color_offset = 0.0
+		var tile = get_or_make_debug_tile(
+			start_id + index, color_offset, primary_color, secondary_color
+		)
+		tile.position = cell_position
+		tiles.append(tile)
+	return tiles
+
+
+func show_range_with_color(
+	cells: Array[Vector3i],
+	start_id: int = 0,
+	color: Color = Color(randf(), randf(), randf()),
+) -> Array[Sprite2D]:
+	var point_count = cells.size()
+	var tiles: Array[Sprite2D] = []
+	for index in point_count:
+		var cell_position = cube_to_local(cells[index])
+		var tile = get_or_make_debug_tile_with_color(start_id + index, color)
+		tile.position = cell_position
+		tiles.append(tile)
+	return tiles
 
 
 func show_debug_tiles(max_id: int = -1) -> void:
@@ -59,6 +104,6 @@ func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
 func _unhandled_input(event: InputEvent):
 	if is_visible_in_tree() and event is InputEventMouseMotion:
 		var cell_under_mouse = get_closest_cell_from_mouse()
-		if cell_under_mouse != hovering_tile:
+		if cell_under_mouse.distance_squared_to(hovering_tile) != 0:
 			hovering_tile = cell_under_mouse
 			hovering_changed.emit()

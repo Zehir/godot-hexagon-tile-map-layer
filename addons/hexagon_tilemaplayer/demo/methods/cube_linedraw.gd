@@ -12,6 +12,7 @@ func _init(_demo: DemoManager) -> void:
 	line = Line2D.new()
 	line.width = 10.0
 	line.default_color = Color.BLUE
+	line.z_index = 100
 	demo.tile_map.add_child(line)
 
 
@@ -45,7 +46,7 @@ func _ready() -> void:
 
 
 func _on_tile_changed() -> void:
-	if not demo.tile_map.hovering_tile:
+	if demo.tile_map.hovering_tile == null:
 		return
 
 	var label = demo.sample_code
@@ -68,15 +69,13 @@ func _on_tile_changed() -> void:
 	label.append_text("[color=57B2FF]print[/color](line.[color=57B2FF]size[/color]())")
 	label.append_text("[color=gray] # %s[/color]\n" % points.size())
 	label.append_text("[color=57B2FF]print[/color](line)\n")
+	
+	var tiles = demo.tile_map.show_range_with_gradient_color(points)
+	
 	var point_count = points.size()
 	for index in point_count:
-		var position = demo.tile_map.cube_to_local(points[index])
-		line.add_point(position)
-		var tile = demo.tile_map.get_or_make_debug_tile(
-			index, remap(index, 0, point_count - 1, 0.0, 1.0)
-		)
-		tile.position = position
-
+		var tile = tiles[index]
+		line.add_point(tile.position)
 		label.push_color(tile.self_modulate)
 		label.append_text("# %s" % var_to_str(points[index]))
 		label.newline()
