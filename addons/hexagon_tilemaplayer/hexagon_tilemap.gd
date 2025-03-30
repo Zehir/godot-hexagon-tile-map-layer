@@ -525,6 +525,10 @@ static func cube_round(frac: Vector3) -> Vector3i:
 ## [br]See [HexagonTileMapLayer.cube_linedraw] for details.
 static func cube_linedraw(a: Vector3i, b: Vector3i) -> Array[Vector3i]:
 	var results: Array[Vector3i] = []
+	if a == b:
+		results.append(a)
+		return results
+
 	var distance = cube_distance(a, b)
 	var ac = Vector3(a)
 	var bc = Vector3(b)
