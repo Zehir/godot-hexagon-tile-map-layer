@@ -20,6 +20,9 @@ const methods: Dictionary[String, GDScript] = {
 	"cube_rotate_from": preload("uid://dnxp71qf1w3vg"),
 	"cube_reflect": preload("uid://but5uj3o3qpac"),
 	"cube_reflect_from": preload("uid://41shw4r5cyc0"),
+	"cube_rect": preload("uid://y2lutl2c46b7"),
+	"cube_rect_corners": preload("uid://bnw55cavqioss"),
+	"cube_ring": preload("uid://cbsxeto3wkwua"),
 }
 
 
