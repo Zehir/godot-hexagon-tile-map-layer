@@ -1,30 +1,12 @@
 extends Node
 
 const DemoManager = preload("uid://c5t8k8u70hsgr")
+const Enums = preload("uid://b2klbw1som8cc")
 var demo: DemoManager
 var line: Line2D
 var tween: Tween
 var current_index: int = -1
 var neighbors: Array = []
-
-enum CellNeighbor {
-	RIGHT_SIDE = 0,
-	RIGHT_CORNER = 1,
-	BOTTOM_RIGHT_SIDE = 2,
-	BOTTOM_RIGHT_CORNER = 3,
-	BOTTOM_SIDE = 4,
-	BOTTOM_CORNER = 5,
-	BOTTOM_LEFT_SIDE = 6,
-	BOTTOM_LEFT_CORNER = 7,
-	LEFT_SIDE = 8,
-	LEFT_CORNER = 9,
-	TOP_LEFT_SIDE = 10,
-	TOP_LEFT_CORNER = 11,
-	TOP_SIDE = 12,
-	TOP_CORNER = 13,
-	TOP_RIGHT_SIDE = 14,
-	TOP_RIGHT_CORNER = 15,
-}
 
 
 func _init(_demo: DemoManager) -> void:
@@ -35,9 +17,9 @@ func _init(_demo: DemoManager) -> void:
 	demo.tile_map.add_child(line)
 
 	for neighbor in demo.tile_map.cube_side_neighbor_directions:
-		neighbors.append([neighbor, CellNeighbor.find_key(neighbor)])
+		neighbors.append([neighbor, Enums.CellNeighbor.find_key(neighbor)])
 	for neighbor in demo.tile_map.cube_corner_neighbor_directions:
-		neighbors.append([neighbor, CellNeighbor.find_key(neighbor)])
+		neighbors.append([neighbor, Enums.CellNeighbor.find_key(neighbor)])
 
 
 func _exit_tree() -> void:
@@ -85,7 +67,7 @@ func update_tile() -> void:
 			demo.tile_map.cube_direction(neighbors[neighbor_index][0]) * 2
 		)
 
-		var key: String = CellNeighbor.find_key(neighbors[neighbor_index][0])
+		var key: String = Enums.CellNeighbor.find_key(neighbors[neighbor_index][0])
 		label.push_color(tile.self_modulate)
 		label.append_text("# %s" % key)
 		if neighbor_index == current_index:
