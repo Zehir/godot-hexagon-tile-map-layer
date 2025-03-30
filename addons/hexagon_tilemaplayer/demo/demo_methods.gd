@@ -16,13 +16,17 @@ const methods: Dictionary[String, GDScript] = {
 	"cube_linedraw": preload("uid://sh0b67wxk8us"),
 	"cube_range": preload("uid://b6cnoelqbw8uc"),
 	"cube_intersect_ranges": preload("uid://dkugmb7vsjusc"),
+	"cube_rotate": preload("uid://d4ndsqop2jy6n"),
+	"cube_rotate_from": preload("uid://dnxp71qf1w3vg"),
+	"cube_reflect": preload("uid://but5uj3o3qpac"),
+	"cube_reflect_from": preload("uid://41shw4r5cyc0"),
 }
 
 
 func _ready() -> void:
 	var root = create_item()
 	root.set_text(0, "Methods")
-	var default = "cube_intersect_ranges"
+	var default = "last"
 	#hide_root = true
 
 	for method_name in methods.keys():

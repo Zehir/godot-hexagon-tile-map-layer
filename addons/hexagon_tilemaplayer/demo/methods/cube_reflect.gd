@@ -28,15 +28,7 @@ func _exit_tree() -> void:
 
 
 func _ready() -> void:
-	(
-		demo
-		. camera_2d
-		. focus_tile(
-			demo.tile_map.cube_to_local(Vector3i.ZERO),
-			DemoCamera.FocusSide.BOTTOM_LEFT,
-		)
-	)
-
+	demo.camera_2d.focus_tile(demo.tile_map.cube_to_local(Vector3i.ZERO))
 	if demo.tile_map.tile_set.tile_offset_axis == TileSet.TILE_OFFSET_AXIS_HORIZONTAL:
 		demo.tile_map.hovering_tile = Vector3i(6, -3, -3)
 	else:
@@ -54,30 +46,36 @@ func _on_tile_changed() -> void:
 	line.clear_points()
 
 	label.push_color(Color.from_string("CBCDD0", Color.WHITE))
-	label.append_text("[color=C45C6D]var[/color] line = [color=57B2FF]cube_linedraw[/color](\n")
+	label.append_text("[color=C45C6D]var[/color] cell = [color=57B2FF]cube_reflect[/color](\n")
 	label.push_color(demo.tile_map.PRIMARY_COLOR)
-	label.append_text("\tVector3i.ZERO")
+	label.append_text("\t%s" % var_to_str(demo.tile_map.hovering_tile))
 	label.pop()
 	label.append_text(",\n")
 	label.push_color(demo.tile_map.SECONDARY_COLOR)
-	label.append_text("\t%s\n" % var_to_str(demo.tile_map.hovering_tile))
+	label.append_text("\tVector3i.Axis.AXIS_Z\n")
 	label.pop()
-	label.append_text(")\n\n")
+	label.append_text(")\n")
 
-	var points = demo.tile_map.cube_linedraw(Vector3i.ZERO, demo.tile_map.hovering_tile)
+	var cells: Array[Vector3i] = []
 
-	label.append_text("[color=57B2FF]print[/color](line.[color=57B2FF]size[/color]())")
-	label.append_text("[color=gray] # %s[/color]\n" % points.size())
-	label.append_text("[color=57B2FF]print[/color](line)\n")
+	cells.append(demo.tile_map.hovering_tile)
+	var axis_letters = ["X", "Y", "Z"]
+	for axis in [Vector3i.Axis.AXIS_X, Vector3i.Axis.AXIS_Y, Vector3i.Axis.AXIS_Z]:
+		cells.append(demo.tile_map.cube_reflect(demo.tile_map.hovering_tile, axis))
 
-	var tiles = demo.tile_map.show_range_with_gradient_color(points)
-
-	var point_count = points.size()
+	var tiles = demo.tile_map.show_range_with_gradient_color(cells)
+	line.add_point(demo.tile_map.cube_to_local(Vector3i.ZERO))
+	var point_count = cells.size()
 	for index in point_count:
 		var tile = tiles[index]
 		line.add_point(tile.position)
 		label.push_color(tile.self_modulate)
-		label.append_text("# %s" % var_to_str(points[index]))
+		if index == 0:
+			label.append_text("# Origin - %s" % var_to_str(cells[index]))
+		else:
+			label.append_text(
+				"# AXIS_%s - %s" % [axis_letters[index - 1], var_to_str(cells[index])]
+			)
 		label.newline()
 		label.pop()
 

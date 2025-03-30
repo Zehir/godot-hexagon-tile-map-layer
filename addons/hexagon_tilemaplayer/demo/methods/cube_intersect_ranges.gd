@@ -68,7 +68,7 @@ func _on_tile_changed() -> void:
 	label.append_text("[color=57B2FF]print[/color](cells)\n")
 
 	var base_index = first_range.size() + second_range.size()
-	
+
 	var tiles = demo.tile_map.show_range_with_gradient_color(cells, base_index)
 
 	var point_count = cells.size()
