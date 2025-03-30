@@ -48,7 +48,7 @@ func _on_tile_changed() -> void:
 
 	var distance = demo.tile_map.cube_distance(Vector3i.ZERO, demo.tile_map.hovering_tile)
 	var points = demo.tile_map.cube_ring(Vector3i.ZERO, distance)
-	
+
 	label.push_color(Color.from_string("CBCDD0", Color.WHITE))
 	label.append_text("[color=C45C6D]var[/color] rect = [color=57B2FF]cube_ring[/color](\n")
 	label.push_color(Color.WHITE)

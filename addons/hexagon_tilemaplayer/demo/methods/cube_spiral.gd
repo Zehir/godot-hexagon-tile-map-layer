@@ -46,28 +46,19 @@ func _on_tile_changed() -> void:
 	label.clear()
 	line.clear_points()
 
+	var distance = demo.tile_map.cube_distance(Vector3i.ZERO, demo.tile_map.hovering_tile)
+	var points = demo.tile_map.cube_spiral(Vector3i.ZERO, distance)
+
 	label.push_color(Color.from_string("CBCDD0", Color.WHITE))
-	label.append_text("[color=C45C6D]var[/color] rect = [color=57B2FF]cube_rect_corners[/color](\n")
+	label.append_text("[color=C45C6D]var[/color] rect = [color=57B2FF]cube_spiral[/color](\n")
 	label.push_color(Color.WHITE)
 	label.append_text("\tVector3i.ZERO")
 	label.pop()
 	label.append_text(",\n")
 	label.push_color(demo.tile_map.SECONDARY_COLOR)
-	label.append_text("\t%s" % var_to_str(demo.tile_map.hovering_tile))
+	label.append_text("\t%s\n" % distance)
 	label.pop()
-	label.append_text(",\n")
-
-	var axis: Vector3i.Axis
-
-	if demo.tile_map.tile_set.tile_offset_axis == TileSet.TILE_OFFSET_AXIS_HORIZONTAL:
-		axis = Vector3i.Axis.AXIS_Y
-		label.append_text("\t[color=41F9BE]Vector3i[/color][color=BCE0FF].Axis.AXIS_Y[/color]\n")
-	else:
-		axis = Vector3i.Axis.AXIS_X
-		label.append_text("\t[color=41F9BE]Vector3i[/color][color=BCE0FF].Axis.AXIS_X[/color]\n")
-	label.append_text(")\n\n")
-
-	var points = demo.tile_map.cube_rect_corners(Vector3i.ZERO, demo.tile_map.hovering_tile, axis)
+	label.append_text(")\n")
 	label.append_text("[color=57B2FF]print[/color](rect.[color=57B2FF]size[/color]())")
 	label.append_text("[color=gray] # %s[/color]\n" % points.size())
 	label.append_text("[color=57B2FF]print[/color](rect)\n")

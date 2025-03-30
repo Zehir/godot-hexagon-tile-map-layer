@@ -56,9 +56,9 @@ func _on_tile_changed() -> void:
 	label.append_text("\t%s" % var_to_str(demo.tile_map.hovering_tile))
 	label.pop()
 	label.append_text(",\n")
-	
+
 	var axis: Vector3i.Axis
-	
+
 	if demo.tile_map.tile_set.tile_offset_axis == TileSet.TILE_OFFSET_AXIS_HORIZONTAL:
 		axis = Vector3i.Axis.AXIS_Y
 		label.append_text("\t[color=41F9BE]Vector3i[/color][color=BCE0FF].Axis.AXIS_Y[/color]\n")
