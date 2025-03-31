@@ -11,8 +11,10 @@ config_version=5
 [application]
 
 config/name="Hexagon TileMapLayer"
+config/tags=PackedStringArray("addon")
 run/main_scene="uid://sb5qw0ue2vc4"
 config/features=PackedStringArray("4.4", "Mobile")
+config/icon="uid://xo8jeldo62n5"
 
 [debug]
 
