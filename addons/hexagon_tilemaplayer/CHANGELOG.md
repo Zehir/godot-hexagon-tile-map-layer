@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.5.0
+
+### Minor Changes
+
+- c8e4691: Added `cube_explore` demo.
+- 14d6f07: Removed old example folder.
+- 7f40399: Added demo for Path finding.
+- 8e96a08: Added demo for tile shape.
+- 96cf0e0: Added demo in build. #11
+- fbc1ede: Updated SVG icons.
+- fed8915: Added `cube_outlines` demo.
+- 14d6f07: Cleanup demo with new data set and menu.
+
 ## 2.4.0
 
 ### Minor Changes
