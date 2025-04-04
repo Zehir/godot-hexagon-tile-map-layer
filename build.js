@@ -51,27 +51,14 @@ function addFilesToZip(zip, sourceDir, zipPath = '', excludes = []) {
 }
 
 // Create archives
-const baseArchiveName = `${packageJson.name}-${packageJson.version}`;
-const exampleArchiveName = `${baseArchiveName}-with-example`;
-const addonArchiveName = `${baseArchiveName}-addon`;
-
-// Create full archive
-const fullZip = new AdmZip();
-const excludePatterns = [];
-
-addFilesToZip(fullZip, ADDON_PATH, path.join(exampleArchiveName, ADDON_PATH), excludePatterns);
-fullZip.writeZip(path.join(DIST_PATH, `${exampleArchiveName}.zip`));
-
-excludePatterns.push('example');
-excludePatterns.push('demo');
+const addonArchiveName = `${packageJson.name}-${packageJson.version}`;
 
 // Create addon archive
 const addonZip = new AdmZip();
-addFilesToZip(addonZip, ADDON_PATH, path.join(addonArchiveName, ADDON_PATH), excludePatterns);
+addFilesToZip(addonZip, ADDON_PATH, path.join(addonArchiveName, ADDON_PATH));
 addonZip.writeZip(path.join(DIST_PATH, `${addonArchiveName}.zip`));
 
 console.log(`Created archives in ${DIST_PATH}:`);
-console.log(`- ${exampleArchiveName}.zip`);
 console.log(`- ${addonArchiveName}.zip`);
 
 const download_url = `${REPO_URL}/releases/download/v${packageJson.version}/${addonArchiveName}.zip`;
