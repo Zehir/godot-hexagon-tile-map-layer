@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c3tqvwb12rhq3"
-path="res://.godot/imported/tile_vertical.png-5155b8e5cf8c771f0729e27117491859.ctex"
+path="res://.godot/imported/tile_vertical.png-4d3c4b3e779bb467f9e0004cd13ec8bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/hexagon_tilemaplayer/example/tile_vertical.png"
-dest_files=["res://.godot/imported/tile_vertical.png-5155b8e5cf8c771f0729e27117491859.ctex"]
+source_file="res://addons/hexagon_tilemaplayer/demo/tile_vertical.png"
+dest_files=["res://.godot/imported/tile_vertical.png-4d3c4b3e779bb467f9e0004cd13ec8bf.ctex"]
 
 [params]
 

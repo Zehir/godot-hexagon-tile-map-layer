@@ -78,6 +78,11 @@ func _on_enable_pathfinding_toggled(toggled_on: bool) -> void:
 			demo.tile_map.astar = null
 		demo.tile_map._draw_debug.call_deferred()
 
+	var old_method = methods_tree.get_selected()
+	if old_method:
+		methods_tree.deselect_all()
+		methods_tree.set_selected(old_method, 0)
+
 
 func update_debug_mode() -> void:
 	demo.tile_map.debug_mode = (

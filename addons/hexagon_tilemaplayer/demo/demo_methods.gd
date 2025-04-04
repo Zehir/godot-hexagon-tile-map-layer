@@ -29,8 +29,15 @@ const shapes: Dictionary[String, GDScript] = {
 	"cube_range": preload("uid://b6cnoelqbw8uc"),
 	"cube_intersect_ranges": preload("uid://dkugmb7vsjusc"),
 }
+const path_finding: Dictionary[String, GDScript] = {
+	"Path finding": preload("uid://dims64wdod28x"),
+}
 
-const other_methods: Dictionary[String, GDScript] = {}
+const misc_methods: Dictionary[String, GDScript] = {
+	"cube_explore": preload("uid://dbamn3uneu4mm"),
+	"cube_outlines": preload("uid://1nm2lgaxjg17"),
+	"tile_shape": preload("uid://crw1uyiphc514"),
+}
 
 
 func _ready() -> void:
@@ -41,16 +48,22 @@ func _ready() -> void:
 	add_methods(root, "Neighbors", neighbors)
 	add_methods(root, "Transform", transform)
 	add_methods(root, "Shapes", shapes)
+	add_methods(root, "Path finding", path_finding)
+	add_methods(root, "Misc", misc_methods)
 
 
 func add_methods(root: TreeItem, label: String, methods: Dictionary[String, GDScript]):
-	if methods.size() > 0:
-		var methods_root = create_item(root)
-		methods_root.set_text(0, label)
-		for method_name in methods.keys():
-			var child = create_item(methods_root)
-			child.set_text(0, method_name)
-			child.set_metadata(0, methods[method_name])
+	if methods.size() == 0:
+		return
+
+	if methods.size() > 1:
+		root = create_item(root)
+		root.set_text(0, label)
+
+	for method_name in methods.keys():
+		var child = create_item(root)
+		child.set_text(0, method_name)
+		child.set_metadata(0, methods[method_name])
 
 
 func _on_item_selected() -> void:

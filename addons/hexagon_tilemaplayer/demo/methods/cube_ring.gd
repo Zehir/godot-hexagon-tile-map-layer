@@ -50,7 +50,7 @@ func _on_tile_changed() -> void:
 	var points = demo.tile_map.cube_ring(Vector3i.ZERO, distance)
 
 	label.push_color(Color.from_string("CBCDD0", Color.WHITE))
-	label.append_text("[color=C45C6D]var[/color] rect = [color=57B2FF]cube_ring[/color](\n")
+	label.append_text("[color=C45C6D]var[/color] ring = [color=57B2FF]cube_ring[/color](\n")
 	label.push_color(Color.WHITE)
 	label.append_text("\tVector3i.ZERO")
 	label.pop()
@@ -59,9 +59,9 @@ func _on_tile_changed() -> void:
 	label.append_text("\t%s\n" % distance)
 	label.pop()
 	label.append_text(")\n")
-	label.append_text("[color=57B2FF]print[/color](rect.[color=57B2FF]size[/color]())")
+	label.append_text("[color=57B2FF]print[/color](ring.[color=57B2FF]size[/color]())")
 	label.append_text("[color=gray] # %s[/color]\n" % points.size())
-	label.append_text("[color=57B2FF]print[/color](rect)\n")
+	label.append_text("[color=57B2FF]print[/color](ring)\n")
 
 	var tiles = demo.tile_map.show_range_with_gradient_color(points)
 

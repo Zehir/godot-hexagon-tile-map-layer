@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=3 format=3 uid="uid://l4anov1m1f53"]
 
-[ext_resource type="Texture2D" uid="uid://c3tqvwb12rhq3" path="res://addons/hexagon_tilemaplayer/example/tile_vertical.png" id="1_q3d33"]
+[ext_resource type="Texture2D" uid="uid://c3tqvwb12rhq3" path="res://addons/hexagon_tilemaplayer/demo/tile_vertical.png" id="1_q3d33"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yisdk"]
 texture = ExtResource("1_q3d33")
@@ -8,22 +8,28 @@ texture_region_size = Vector2i(190, 164)
 0:0/next_alternative_id = 6
 0:0/0 = 0
 0:0/0/custom_data_1 = 1.0
+0:0/0/custom_data_2 = &"white"
 0:0/1 = 1
 0:0/1/modulate = Color(0.180392, 0.8, 0.443137, 1)
 0:0/1/custom_data_1 = 1.0
+0:0/1/custom_data_2 = &"green"
 0:0/2 = 2
 0:0/2/modulate = Color(0.203922, 0.596078, 0.858824, 1)
 0:0/2/custom_data_0 = true
 0:0/2/custom_data_1 = 5.0
+0:0/2/custom_data_2 = &"blue"
 0:0/3 = 3
 0:0/3/modulate = Color(0.203922, 0.286275, 0.368627, 1)
 0:0/3/custom_data_1 = 5.0
+0:0/3/custom_data_2 = &"asphalt"
 0:0/4 = 4
 0:0/4/modulate = Color(0.901961, 0.494118, 0.133333, 1)
 0:0/4/custom_data_1 = 5.0
+0:0/4/custom_data_2 = &"carrot"
 0:0/5 = 5
 0:0/5/modulate = Color(0.498039, 0.54902, 0.552941, 1)
 0:0/5/custom_data_1 = 1.0
+0:0/5/custom_data_2 = &"concrete"
 
 [resource]
 resource_name = "Vertical"
@@ -34,4 +40,6 @@ custom_data_layer_0/name = "is_ocean"
 custom_data_layer_0/type = 1
 custom_data_layer_1/name = "pathfinding_weight"
 custom_data_layer_1/type = 3
+custom_data_layer_2/name = "color"
+custom_data_layer_2/type = 21
 sources/1 = SubResource("TileSetAtlasSource_yisdk")
