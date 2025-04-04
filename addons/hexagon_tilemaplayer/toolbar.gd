@@ -7,7 +7,7 @@ var plugin = EditorPlugin
 
 func _init(_plugin: EditorPlugin) -> void:
 	plugin = _plugin
-	icon = preload("hexagon_tilemaplayer.svg")
+	icon = preload("uid://chl4qyjdth4vj")
 	popup = get_popup()
 	selection = EditorInterface.get_selection()
 	_populate_menu()

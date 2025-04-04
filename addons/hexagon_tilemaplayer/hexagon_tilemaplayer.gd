@@ -1,5 +1,5 @@
 @tool
-@icon("hexagon_tilemaplayer.svg")
+@icon("uid://chl4qyjdth4vj")
 
 ## Set of tools to use hexagon based tilemap in Godot with [AStar2D] pathfinding and cube coordinates system.
 ##
