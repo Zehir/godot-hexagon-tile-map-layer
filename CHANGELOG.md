@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.5.1
+
+### Patch Changes
+
+- f27e698: Refactor tile_set reference to use WeakRef. Fix #14
+- fda61f2: Fix demo when switching layout without any method selected.
+
 ## 2.5.0
 
 ### Minor Changes
