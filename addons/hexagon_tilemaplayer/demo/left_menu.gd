@@ -53,7 +53,8 @@ func switch_to_tilemap(new_tile_map: HexagonTileMapLayer):
 	_on_enable_pathfinding_toggled(button_enable_pathfinding.button_pressed)
 	update_debug_mode()
 	_on_tile_layout_selected(old_layout)
-	methods_tree.set_selected(old_method, 0)
+	if old_method:
+		methods_tree.set_selected(old_method, 0)
 
 
 func _on_tile_layout_selected(index: int) -> void:
