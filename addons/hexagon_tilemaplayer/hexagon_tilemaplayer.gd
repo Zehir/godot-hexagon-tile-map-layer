@@ -36,7 +36,7 @@ class TileShape:
 		return TileShape.new(shape, Transform2D(transform.x, transform.y, position))
 
 
-var _current_tile_set: TileSet
+var _current_tile_set: WeakRef
 
 ## [AStar2D] instance for this [HexagonTileMapLayer]. Only avaliable if [HexagonTileMapLayer.pathfinding_enabled] is true.
 var astar: AStar2D
@@ -108,17 +108,20 @@ func _enter_tree() -> void:
 	if Engine.is_editor_hint():
 		tile_set.changed.connect(update_configuration_warnings)
 	else:
-		_current_tile_set = tile_set
+		_current_tile_set = weakref(tile_set)
 		tile_set.changed.connect(_on_tileset_changed)
 		changed.connect(_on_changed)
 
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint():
-		tile_set.changed.disconnect(update_configuration_warnings)
+		if tile_set.changed.is_connected(update_configuration_warnings):
+			tile_set.changed.disconnect(update_configuration_warnings)
 	else:
-		tile_set.changed.disconnect(_on_tileset_changed)
-		changed.disconnect(_on_changed)
+		if tile_set.changed.is_connected(_on_tileset_changed):
+			tile_set.changed.disconnect(_on_tileset_changed)
+		if changed.is_connected(_on_changed):
+			changed.disconnect(_on_changed)
 
 
 func _ready() -> void:
@@ -406,12 +409,13 @@ func local_to_cube(map_position: Vector2) -> Vector3i:
 
 
 func _on_changed() -> void:
-	if _current_tile_set != tile_set:
-		if _current_tile_set:
-			_current_tile_set.changed.disconnect(_on_tileset_changed)
-		_current_tile_set = tile_set
-		if _current_tile_set:
-			_current_tile_set.changed.connect(_on_tileset_changed)
+	var current_tile_set: TileSet = _current_tile_set.get_ref()
+	if current_tile_set != tile_set:
+		if is_instance_valid(current_tile_set) and current_tile_set.changed.is_connected(_on_tileset_changed):
+			current_tile_set.changed.disconnect(_on_tileset_changed)
+		_current_tile_set = weakref(tile_set)
+		if is_instance_valid(tile_set):
+			tile_set.changed.connect(_on_tileset_changed)
 			_on_tileset_changed()
 
 
