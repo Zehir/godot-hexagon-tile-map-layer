@@ -45,8 +45,8 @@ var astar: AStar2D
 @export var pathfinding_enabled: bool = false
 
 var _debug_container: Node2D
-@onready var _debug_font_size = floori(tile_set.tile_size.x / 7.0)
-@onready var _debug_font_outline_size = floori(tile_set.tile_size.x / 32.0)
+var _debug_font_size: int = 12
+var _debug_font_outline_size: int = 2
 
 ## Used with the `debug_mode` property to control debug.
 enum DebugModeFlags {
@@ -105,6 +105,8 @@ var cube_corner_neighbor_directions: Array[TileSet.CellNeighbor]
 
 
 func _enter_tree() -> void:
+	if not is_instance_valid(tile_set):
+		return
 	if Engine.is_editor_hint():
 		tile_set.changed.connect(update_configuration_warnings)
 	else:
@@ -114,6 +116,8 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	if not is_instance_valid(tile_set):
+		return
 	if Engine.is_editor_hint():
 		if tile_set.changed.is_connected(update_configuration_warnings):
 			tile_set.changed.disconnect(update_configuration_warnings)
@@ -139,22 +143,20 @@ func _ready() -> void:
 
 func _get_configuration_warnings():
 	var warnings: Array[String] = []
-	if tile_set.tile_shape != TileSet.TileShape.TILE_SHAPE_HEXAGON:
-		warnings.append("This node only support hexagon shapes")
+	if not is_instance_valid(tile_set):
+		warnings.append("No tile_set defined.")
+	elif tile_set.tile_shape != TileSet.TileShape.TILE_SHAPE_HEXAGON:
+		warnings.append("This node only support hexagon shapes.")
 	return warnings
 
 
 #region Pathfinding
 @warning_ignore("unused_parameter")
-
-
 func _pathfinding_get_tile_weight(coords: Vector2i) -> float:
 	return 1.0
 
 
 @warning_ignore("unused_parameter")
-
-
 func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
 	return true
 
@@ -324,7 +326,7 @@ func _show_debug_text_on_tile(debug_container: Node2D, pos: Vector2i, text: Stri
 	label.set_position(map_to_local(pos))
 	label.bbcode_enabled = true
 	label.text = text
-	label.size.x = tile_set.tile_size.x
+	label.size.x = tile_set.tile_size.x if is_instance_valid(tile_set) else 12
 	label.resized.connect(
 		func():
 			label.position.x -= label.size.x * 0.5
@@ -421,6 +423,13 @@ func _on_changed() -> void:
 
 # Callback to update the static data and conversions methods when the tileset changed.
 func _on_tileset_changed() -> void:
+	if not is_instance_valid(tile_set):
+		_current_tile_set = null
+		_debug_font_size = 12
+		_debug_font_outline_size = 2
+		_cube_to_map = Callable()
+		_map_to_cube = Callable()
+		return
 	_debug_font_size = floori(tile_set.tile_size.x / 7.0)
 	_debug_font_outline_size = floori(tile_set.tile_size.x / 32.0)
 	var conversion_methods := HexagonTileMap.get_conversion_methods_for(
@@ -481,6 +490,9 @@ func _on_tileset_changed() -> void:
 ## [/codeblock]
 ## See also: [method map_to_cube]
 func cube_to_map(cube_position: Vector3i) -> Vector2i:
+	if not _cube_to_map.is_valid():
+		push_error("Could not call the cube_to_map function because the conversion method was not properly set up. Make sure the tile_set is defined.")
+		return Vector2i.ZERO
 	return _cube_to_map.call(cube_position)
 
 
@@ -494,6 +506,9 @@ func cube_to_map(cube_position: Vector3i) -> Vector2i:
 ## [/codeblock]
 ## See also: [method cube_to_map]
 func map_to_cube(map_position: Vector2i) -> Vector3i:
+	if not _map_to_cube.is_valid():
+		push_error("Could not call the map_to_cube function because the conversion method was not properly set up. Make sure the tile_set is defined.")
+		return Vector3i.ZERO
 	return _map_to_cube.call(map_position)
 
 
