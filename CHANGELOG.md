@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.2
+
+### Patch Changes
+
+- dab8550: Add guard clauses when tile_set is not defined. Closes #17.
+
 ## 2.5.1
 
 ### Patch Changes
