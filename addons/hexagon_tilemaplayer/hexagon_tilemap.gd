@@ -926,7 +926,7 @@ static func geometry_vertical_tile_corners(tile_size: Vector2i) -> Array[Vector2
 ##     # Update the tilemap with the new layout
 ##     tilemap.tile_set.tile_layout = new_layout
 ##     tilemap.pathfinding_generate_points()
-##     tilemap._draw_debug.call_deferred()
+##     tilemap.queue_debug_redraw()
 ## [/codeblock]
 static func update_cells_layout(
 	tilemap: HexagonTileMapLayer, from: TileSet.TileLayout, to: TileSet.TileLayout

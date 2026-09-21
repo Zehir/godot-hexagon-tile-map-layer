@@ -45,11 +45,13 @@ func _on_tile_layout_offset_horizontal_pressed() -> void:
 
 func switch_to_tilemap(new_tile_map: HexagonTileMapLayer):
 	demo.tile_map.visible = false
+	demo.tile_map.enabled = false
 	var old_layout = demo.tile_map.tile_set.tile_layout
 	var old_method = methods_tree.get_selected()
 	methods_tree.deselect_all()
 	demo.tile_map = new_tile_map
 	demo.tile_map.visible = true
+	demo.tile_map.enabled = true
 	_on_enable_pathfinding_toggled(button_enable_pathfinding.button_pressed)
 	update_debug_mode()
 	_on_tile_layout_selected(old_layout)
@@ -68,16 +70,6 @@ func _on_tile_layout_selected(index: int) -> void:
 func _on_enable_pathfinding_toggled(toggled_on: bool) -> void:
 	demo.tile_map.pathfinding_enabled = toggled_on
 	button_display_pathfinding_connections.visible = toggled_on
-
-	if demo.tile_map.pathfinding_enabled:
-		demo.tile_map.astar_changed.connect(
-			demo.tile_map._draw_debug, CONNECT_DEFERRED + CONNECT_ONE_SHOT
-		)
-		demo.tile_map.pathfinding_generate_points()
-	else:
-		if demo.tile_map.astar:
-			demo.tile_map.astar = null
-		demo.tile_map._draw_debug.call_deferred()
 
 	var old_method = methods_tree.get_selected()
 	if old_method:

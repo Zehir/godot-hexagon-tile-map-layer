@@ -13,12 +13,15 @@ config_version=5
 config/name="Hexagon TileMapLayer"
 config/tags=PackedStringArray("addon")
 run/main_scene="uid://sb5qw0ue2vc4"
-config/features=PackedStringArray("4.5", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="uid://xo8jeldo62n5"
 
 [debug]
 
-gdscript/warnings/exclude_addons=false
+settings/gdscript/always_track_call_stacks=true
+gdscript/warnings/directory_rules={
+"res://addons": 1
+}
 
 [display]
 

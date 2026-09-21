@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://brm40hxx3wp8n"]
+[gd_resource type="TileSet" format=3 uid="uid://brm40hxx3wp8n"]
 
 [ext_resource type="Texture2D" uid="uid://bay24yvwkqxim" path="res://addons/hexagon_tilemaplayer/demo/tile_horizontal.png" id="1_nas0g"]
 

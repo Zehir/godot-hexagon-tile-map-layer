@@ -42,9 +42,24 @@ var _current_tile_set: WeakRef
 var astar: AStar2D
 
 ## Enable [AStar2D] Pathfinding
-@export var pathfinding_enabled: bool = false
+@export var pathfinding_enabled: bool = false:
+	set(value):
+		if pathfinding_enabled == value:
+			return
+		
+		pathfinding_enabled = value
+		if value:
+			pathfinding_generate_points()
+		else:
+			astar = null
+		queue_debug_redraw()
+
 
 var _debug_container: Node2D
+var _is_queued_for_debug_redraw: bool = false
+var _debug_labels: Dictionary[Vector2i, RichTextLabel] = {}
+# The Vector4i is the combinaison of the "<=" Vector2i and ">" Vector2i cell position
+var _debug_connections: Dictionary[Vector4i, Line2D] = {}
 var _debug_font_size: int = 12
 var _debug_font_outline_size: int = 2
 
@@ -81,9 +96,10 @@ enum DebugModeFlags {
 ## [/codeblock]
 @export_flags("Tiles coords", "Connections") var debug_mode: int = 0:
 	set(value):
+		if debug_mode == value:
+			return
 		debug_mode = value
-		if not Engine.is_editor_hint() and is_inside_tree():
-			_draw_debug()
+		queue_debug_redraw()
 
 ## Emited when the [AStar2D] gets updated.
 signal astar_changed
@@ -105,40 +121,36 @@ var cube_corner_neighbor_directions: Array[TileSet.CellNeighbor]
 
 
 func _enter_tree() -> void:
+	changed.connect(_on_changed)
+
 	if not is_instance_valid(tile_set):
 		return
+
 	if Engine.is_editor_hint():
 		tile_set.changed.connect(update_configuration_warnings)
-	else:
-		_current_tile_set = weakref(tile_set)
-		tile_set.changed.connect(_on_tileset_changed)
-		changed.connect(_on_changed)
+
+	_current_tile_set = weakref(tile_set)
+	tile_set.changed.connect(_on_tileset_changed)
 
 
 func _exit_tree() -> void:
+	if changed.is_connected(_on_changed):
+		changed.disconnect(_on_changed)
+
 	if not is_instance_valid(tile_set):
 		return
-	if Engine.is_editor_hint():
-		if tile_set.changed.is_connected(update_configuration_warnings):
+
+	if Engine.is_editor_hint() and tile_set.changed.is_connected(update_configuration_warnings):
 			tile_set.changed.disconnect(update_configuration_warnings)
-	else:
-		if tile_set.changed.is_connected(_on_tileset_changed):
-			tile_set.changed.disconnect(_on_tileset_changed)
-		if changed.is_connected(_on_changed):
-			changed.disconnect(_on_changed)
+
+	if tile_set.changed.is_connected(_on_tileset_changed):
+		tile_set.changed.disconnect(_on_tileset_changed)
 
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
-
 	_on_tileset_changed()
-
 	if pathfinding_enabled:
-		astar_changed.connect(_draw_debug, CONNECT_DEFERRED + CONNECT_ONE_SHOT)
 		pathfinding_generate_points()
-	else:
-		_draw_debug.call_deferred()
 
 
 func _get_configuration_warnings():
@@ -148,6 +160,17 @@ func _get_configuration_warnings():
 	elif tile_set.tile_shape != TileSet.TileShape.TILE_SHAPE_HEXAGON:
 		warnings.append("This node only support hexagon shapes.")
 	return warnings
+
+
+func _update_cells(coords: Array[Vector2i], forced_cleanup: bool) -> void:
+	if coords.is_empty() and enabled and is_visible_in_tree():
+		forced_cleanup = true
+		coords = get_used_cells()
+
+	if pathfinding_enabled:
+		pathfinding_generate_points(coords, forced_cleanup)
+
+	queue_debug_redraw(coords, forced_cleanup)
 
 
 #region Pathfinding
@@ -164,6 +187,7 @@ func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
 ## Gets the internal AStar2D node ID for a hex.
 ##
 ## [br]This function is essential for working with AStar2D pathfinding operations, as it converts tilemap coordinates to the unique IDs used by the pathfinding system.
+## [br]Return -1 if the tile is not part of the pathfinding.
 ## [codeblock]
 ## # Get ID for a specific hex
 ## var hex_pos_a = Vector2i(-2, -1)
@@ -186,7 +210,11 @@ func _pathfinding_does_tile_connect(tile: Vector2i, neighbor: Vector2i) -> bool:
 ## print(are_connected)  # Output: true
 ## [/codeblock]
 func pathfinding_get_point_id(coord: Vector2i) -> int:
-	return astar.get_closest_point(map_to_local(coord))
+	var pos: Vector2 = map_to_local(coord)
+	var id: int = astar.get_closest_point(pos)
+	if id != -1 and not astar.get_point_position(id).is_equal_approx(pos):
+		id = -1
+	return id
 
 
 ## Updates the pathfinding weight for a specific hex.
@@ -225,77 +253,122 @@ func _pathfinding_generate_points():
 ## [br]The points capacity is automatically adjusted based on the number of used cells.
 ## [br]If later you need to add more points to the astar instance call [method AStar2D.reserve_space] with num_nodes the total of points multiplied by 1.12.
 ## [br]See [url=https://github.com/godotengine/godot/issues/102612#issuecomment-2702275926]this issue[/url] for more information.
-func pathfinding_generate_points():
+func pathfinding_generate_points(cells: Array[Vector2i] = get_used_cells(), forced_cleanup: bool = true):
 	if not astar:
 		astar = AStar2D.new()
-	_pathfinding_create_points()
-	_pathfinding_create_connections()
+		forced_cleanup = true
+	var ids: Array[int] = _pathfinding_create_points(cells, forced_cleanup)
+	_pathfinding_create_connections(ids, forced_cleanup)
 	astar_changed.emit()
 
 
-func _draw_debug():
-	if is_instance_valid(_debug_container):
-		_debug_container.queue_free()
-	if debug_mode == 0 or not is_visible_in_tree():
+func queue_debug_redraw(cells: Array[Vector2i] = get_used_cells(), forced_cleanup: bool = true) -> void:
+	if not is_node_ready():
 		return
-	_debug_container = Node2D.new()
-	_debug_container.z_index = 100
+	if _is_queued_for_debug_redraw:
+		return
+	_is_queued_for_debug_redraw = true
+	_draw_debug.call_deferred(cells, forced_cleanup)
+	_is_queued_for_debug_redraw = false
+
+
+func _draw_debug(cells: Array[Vector2i] = get_used_cells(), forced_cleanup: bool = true):
+	if debug_mode == 0 or not enabled or not is_visible_in_tree():
+		if is_instance_valid(_debug_container):
+			_debug_container.queue_free()
+		return
+
+	if forced_cleanup and is_instance_valid(_debug_container):
+			_debug_container.queue_free()
+
+	if not is_instance_valid(_debug_container) or _debug_container.is_queued_for_deletion():
+		
+		_debug_container = Node2D.new()
+		_debug_container.name = "Node %d" % (randf() * 10000)
+		_debug_container.tree_exiting.connect((func():
+			_debug_labels.clear()
+			_debug_connections.clear()
+		))
+		#_debug_container.z_index = 100
+		add_child.call_deferred(_debug_container)
 
 	if debug_mode & DebugModeFlags.CONNECTIONS and pathfinding_enabled:
-		var connections_container: Node2D = Node2D.new()
-		for id in astar.get_point_ids():
-			for neighbour_id in astar.get_point_connections(id):
-				if neighbour_id > id:
-					_pathfinding_debug_display_connection(
-						connections_container,
-						id,
-						neighbour_id,
-						Color(randf(), randf(), randf(), 1.0)
-					)
-		_debug_container.add_child(connections_container)
+		for pos in cells:
+			_pathfinding_debug_display_connection(pos)
+	else:
+		for line: Line2D in _debug_connections.values():
+			line.queue_free()
+		_debug_connections.clear()
 
 	if debug_mode & DebugModeFlags.TILES_COORDS:
-		var coords_container: Node2D = Node2D.new()
 		if pathfinding_enabled:
-			for id in astar.get_point_ids():
-				_debug_tile_coords_with_pathfinding(coords_container, id)
+			for pos in cells:
+				_debug_tile_coords_with_pathfinding(pos)
 		else:
-			for pos in get_used_cells():
-				_debug_tile_coords(coords_container, pos)
-		_debug_container.add_child(coords_container)
+			for pos in cells:
+				_debug_tile_coords(pos)
+	else:
+		for label: RichTextLabel in _debug_labels.values():
+			label.queue_free()
+		_debug_labels.clear()
 
-	add_child.call_deferred(_debug_container)
 
-
-func _pathfinding_create_points():
-	astar.clear()
-	var cells := get_used_cells()
+func _pathfinding_create_points(cells: Array[Vector2i], forced_cleanup: bool = false) -> Array[int]:
+	if forced_cleanup:
+		astar.clear()
 	# Why 1.12 ? See https://github.com/godotengine/godot/issues/102612#issuecomment-2702275926
-	var needed_space = cells.size() * 1.12
+	var needed_space = get_used_cells().size() * 1.12
 	if astar.get_point_capacity() < needed_space:
 		astar.reserve_space(needed_space)
 
 	var id: int = -1
-	for coord in cells:
-		id += 1
-		var weight = _pathfinding_get_tile_weight(coord)
-		var pos = map_to_local(coord)
-		astar.add_point(id, pos, weight)
+	var weight: float = -1.0
+	var pos: Vector2 = Vector2.ZERO
+	var ids: Array[int] = []
+
+	if forced_cleanup:
+		for coord in cells:
+			if get_cell_source_id(coord) == -1:
+				continue
+			id += 1
+			weight = _pathfinding_get_tile_weight(coord)
+			pos = map_to_local(coord)
+			astar.add_point(id, pos, weight)
+			ids.append(id)
+	else:
+		for coord in cells:
+			weight = _pathfinding_get_tile_weight(coord)
+			pos = map_to_local(coord)
+
+			id = pathfinding_get_point_id(pos)
+			if id == -1:
+				if get_cell_source_id(coord) == -1:
+					continue
+				id = astar.get_available_point_id()
+				astar.add_point(id, pos, weight)
+			else:
+				if get_cell_source_id(coord) == -1:
+					astar.remove_point(id)
+					continue
+				astar.set_point_position(id, pos)
+				astar.set_point_weight_scale(id, weight)
+			ids.append(id)
+	return ids
 
 
-func _debug_tile_coords_with_pathfinding(debug_container: Node2D, id: int):
-	var pos = local_to_map(astar.get_point_position(id))
+func _debug_tile_coords_with_pathfinding(pos: Vector2i, prefix = ""):
+	var id: int = pathfinding_get_point_id(pos)
+	_debug_tile_coords(pos, "%s#%d\n" % [prefix, id])
+
+
+func _debug_tile_coords(pos: Vector2i, prefix = ""):
+	if get_cell_source_id(pos) == -1:
+		_show_debug_text_on_tile(pos, "")
+		return
+
 	var cube = map_to_cube(pos)
-	var text = (
-		"[center]#%d\n(%d, %d)\n(%d, %d, %d)[/center]" % [id, pos.x, pos.y, cube.x, cube.y, cube.z]
-	)
-	_show_debug_text_on_tile(debug_container, pos, text)
-
-
-func _debug_tile_coords(debug_container: Node2D, pos: Vector2i):
-	var cube = map_to_cube(pos)
-	var text = "[center](%d, %d)\n(%d, %d, %d)[/center]" % [pos.x, pos.y, cube.x, cube.y, cube.z]
-	_show_debug_text_on_tile(debug_container, pos, text)
+	var text = "[center]%s(%d, %d)\n(%d, %d, %d)[/center]" % [prefix, pos.x, pos.y, cube.x, cube.y, cube.z]
+	_show_debug_text_on_tile(pos, text)
 
 
 ## Helper function to display text centered on a hex tile.
@@ -320,29 +393,42 @@ func _debug_tile_coords(debug_container: Node2D, pos: Vector2i):
 ##     var label_text = "[center]Hex %d[/center]" % [hex_count]
 ##     tilemap._show_debug_text_on_tile(debug_container, hex, label_text)
 ## [/codeblock]
-func _show_debug_text_on_tile(debug_container: Node2D, pos: Vector2i, text: String):
-	var label: RichTextLabel = RichTextLabel.new()
-	label.fit_content = true
-	label.set_position(map_to_local(pos))
-	label.bbcode_enabled = true
+func _show_debug_text_on_tile(pos: Vector2i, text: String):
+	if text.is_empty():
+		if _debug_labels.has(pos):
+			_debug_labels.get(pos).queue_free()
+			_debug_labels.erase(pos)
+		return
+
+	var label: RichTextLabel
+	if _debug_labels.has(pos):
+		label = _debug_labels.get(pos)
+	else:
+		label = RichTextLabel.new()
+		label.fit_content = true
+		label.bbcode_enabled = true
+		label.size = (Vector2(tile_set.tile_size) * 0.7) if is_instance_valid(tile_set) else Vector2(12.0, 12.0)
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.scroll_active = false
+		label.add_theme_font_size_override("normal_font_size", _debug_font_size)
+		label.add_theme_constant_override("outline_size", _debug_font_outline_size)
+
+		# 4.8 feature : https://github.com/godotengine/godot/pull/116791
+		label.set(&"resize_font_to_fit", true)
+		label.set(&"minimum_font_size", true)
+
+		_debug_container.add_child(label)
+		_debug_labels.set(pos, label)
+
 	label.text = text
-	label.size.x = tile_set.tile_size.x if is_instance_valid(tile_set) else 12
-	label.resized.connect(
-		func():
-			label.position.x -= label.size.x * 0.5
-			label.position.y -= label.size.y * 0.5,
-		ConnectFlags.CONNECT_ONE_SHOT
-	)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.scroll_active = false
-	label.add_theme_font_size_override("normal_font_size", _debug_font_size)
-	label.add_theme_constant_override("outline_size", _debug_font_outline_size)
-	debug_container.add_child(label)
+	label.set_position(map_to_local(pos) - label.size * 0.5)
 
 
-func _pathfinding_create_connections() -> void:
-	var neighbours = cube_side_neighbor_directions.slice(0, 3)
-	for id in astar.get_point_ids():
+func _pathfinding_create_connections(point_ids: PackedInt64Array, forced_cleanup: bool = false) -> void:
+	var neighbours = cube_side_neighbor_directions
+	if forced_cleanup:
+		neighbours = neighbours.slice(0,3)
+	for id in point_ids:
 		var local_position = astar.get_point_position(id)
 		var map_position = local_to_map(local_position)
 		for neighbour in neighbours:
@@ -351,20 +437,45 @@ func _pathfinding_create_connections() -> void:
 				continue
 			if not _pathfinding_does_tile_connect(map_position, neighbour_map_position):
 				continue
-			var neighbour_id = astar.get_closest_point(map_to_local(neighbour_map_position))
-			astar.connect_points(id, neighbour_id)
+			var neighbour_id = pathfinding_get_point_id(neighbour_map_position)
+			if neighbour_id != -1:
+				astar.connect_points(id, neighbour_id)
 
 
-func _pathfinding_debug_display_connection(
-	debug_container: Node2D, id1: int, id2: int, color: Color
-):
-	var line: Line2D = Line2D.new()
-	line.default_color = color
-	line.add_point(astar.get_point_position(id1))
-	line.add_point(astar.get_point_position(id2))
-	debug_container.add_child(line)
+func _pathfinding_debug_display_connection(center_pos: Vector2i):
+	var center_id: int = pathfinding_get_point_id(center_pos)
+	var center_source_valid: bool = get_cell_source_id(center_pos) != -1
 
+	for neighbour in cube_side_neighbor_directions:
+		var neighbour_map_position = get_neighbor_cell(center_pos, neighbour)
+		var link_id: Vector4i = (
+			Vector4i(center_pos.x, center_pos.y, neighbour_map_position.x, neighbour_map_position.y)
+			if center_pos < neighbour_map_position else
+			Vector4i(neighbour_map_position.x, neighbour_map_position.y, center_pos.x, center_pos.y)
+		)
+		var link_valid = center_source_valid and get_cell_source_id(neighbour_map_position) != -1
+		var neighbour_id: int = -1
+		if link_valid:
+			neighbour_id = pathfinding_get_point_id(neighbour_map_position)
+			if neighbour_id != -1:
+				link_valid = astar.are_points_connected(center_id, neighbour_id)
+			else:
+				link_valid = false
 
+		if not link_valid:
+			if _debug_connections.has(link_id):
+				_debug_connections.get(link_id).queue_free()
+				_debug_connections.erase(link_id)
+			continue
+
+		var line: Line2D = _debug_connections.get(link_id)
+		if not is_instance_valid(line):
+			line = Line2D.new()
+			line.default_color = Color(randf(), randf(), randf(), 1.0)
+			line.add_point(astar.get_point_position(center_id))
+			line.add_point(astar.get_point_position(neighbour_id))
+			_debug_connections.set(link_id, line)
+			_debug_container.add_child(line)
 #endregion
 
 
@@ -1424,7 +1535,7 @@ func cube_outlines(cells: Array[Vector3i]) -> Array[Array]:
 ##     # Update the tilemap with the new layout
 ##     tilemap.tile_set.tile_layout = new_layout
 ##     tilemap.pathfinding_generate_points()
-##     tilemap._draw_debug.call_deferred()
+##     tilemap.queue_debug_redraw()
 ## [/codeblock]
 func update_cells_layout(from: TileSet.TileLayout, to: TileSet.TileLayout):
 	HexagonTileMap.update_cells_layout(self, from, to)
