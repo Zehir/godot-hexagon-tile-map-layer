@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.0
+
+### Minor Changes
+
+- e7f6b89: Add support for running in the editor. Closes #20
+- e7f6b89: Add `queue_debug_redraw` method to force a debug info redraw.
+- e7f6b89: Add `cells` and `forced_cleanup` parameters to multiple methods to update the AStar map without rebuilding everything.
+- e7f6b89: Added reactive updates to pathfinding on cell updates.
+
 ## 2.5.2
 
 ### Patch Changes
