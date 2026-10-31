@@ -42,7 +42,7 @@ jobs:
       - name: Set Release Version
         if: steps.changesets.outputs.published == 'true'
         id: get-tag_name
-        run: echo "tag_name=v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}" >> $GITHUB_OUTPUT
+        run: echo "tag_name=v${{ fromJson(steps.changesets.outputs['published-packages'])[0].version }}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         if: steps.changesets.outputs.published == 'true'
